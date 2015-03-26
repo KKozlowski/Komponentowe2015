@@ -10,7 +10,7 @@ public class Event implements Comparable<Event>, Comparator<Event>{
 	private Date data = new Date();
 	private Comparator<Event> comparator;
 	//private GregorianCalendar date = new GregorianCalendar();
-	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	public Event(){
 		comparator = new DateComparator();
@@ -20,10 +20,6 @@ public class Event implements Comparable<Event>, Comparator<Event>{
 		this();
 		setName(name);
 		setDate(dataa);
-	}
-	
-	public Event(Object ob){
-		
 	}
 	
 	
@@ -73,7 +69,7 @@ public class Event implements Comparable<Event>, Comparator<Event>{
 		return comparator.compare(arg0, arg1);
 	}
 	
-	public class NameComparator implements Comparator<Event>{
+	class NameComparator implements Comparator<Event>{
 
 		@Override
 		public int compare(Event arg0, Event arg1) {
@@ -82,7 +78,7 @@ public class Event implements Comparable<Event>, Comparator<Event>{
 		
 	}
 	
-	public class DateComparator implements Comparator<Event>{
+	class DateComparator implements Comparator<Event>{
 
 		@Override
 		public int compare(Event arg0, Event arg1) {

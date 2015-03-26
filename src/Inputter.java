@@ -7,4 +7,10 @@ public class Inputter {
 		ile = JOptionPane.showInputDialog(request);
 		return Integer.parseInt(ile);
 	}
+	
+	public String GetString(String request){
+		String str;
+		str = JOptionPane.showInputDialog(request);
+		return str;
+	}
 }

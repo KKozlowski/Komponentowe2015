@@ -1,25 +1,15 @@
-import java.util.Arrays;
-
 public class Klasa {
 
 	public static void main(String[] args) {
-		Event ev = new Event("Spotkanie", "02/03/2014");
-		Event ev2 = new Event("Spotkanie2", "05/03/2014");
 		
-		Object [] tab = new Object[3];
-		tab[0] = new Event("Spotkanie", "02/03/2014");
-		tab[1] = new Event("Spotkanie2", "05/03/2014");
-		tab[2] = new Event("Spotkanie3", "05/02/2014");
+		EventContainer kont = new EventContainer();
+		kont.GetEvents();
 		
-		Arrays.sort(tab);
-		
-		for(Object i : tab)
-			System.out.println(i);
-		
-		Object ob = new Event();
-		
-		
+		//Object obj = new Event("Ev", "12/03/2014");
+		//System.out.println(obj);
 	}
+	 
+	
 
 }
 
