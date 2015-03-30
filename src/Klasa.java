@@ -1,15 +1,16 @@
+import java.io.File;
+import java.io.IOException;
+
+
 public class Klasa {
 
 	public static void main(String[] args) {
-		
 		EventContainer kont = new EventContainer();
 		kont.GetEvents();
-		
-		//Object obj = new Event("Ev", "12/03/2014");
-		//System.out.println(obj);
+		kont.SaveToBin();
+		kont.LoadFromBin();
+		kont.Print();
 	}
-	 
-	
 
 }
 

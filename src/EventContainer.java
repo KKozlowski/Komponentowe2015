@@ -1,5 +1,12 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
+import java.io.*;
 
 public class EventContainer {
 	ArrayList<Event> eventy = new ArrayList<Event>();
@@ -22,6 +29,14 @@ public class EventContainer {
 		System.out.println();
 	}
 	
+	public void Print(){
+		PrintList(eventy);
+	}
+	
+	public void sort(){
+		eventy.sort(new Event().new DateComparator());
+	}
+	
 	public void GetEvents(){
 		Inputter inp = new Inputter();
 		while(true){
@@ -30,8 +45,61 @@ public class EventContainer {
 			if(nazwa.equals("0") && data.equals("0")) break;
 			Event ev = new Event(nazwa, data);
 			eventy.add(ev);
-			eventy.sort(ev.new DateComparator());
+			sort();
 			PrintList(eventy);
 		}
+	}
+	
+	public int GetSize(){
+		return eventy.size();
+	}
+	
+	public void SaveToBin(){
+		try {
+			DataOutputStream eventStream = 		// Strumien zapisujacy liczby
+				new DataOutputStream(new FileOutputStream("data/events.bin")); 
+			
+			eventStream.writeInt(GetSize());
+			for (int i=0; i< GetSize(); i++){
+				//strumienTablicy.writeChars(eventy.get(i).getName());
+				eventStream.writeUTF(eventy.get(i).getName());
+				eventStream.writeLong(eventy.get(i).getMiliseconds());
+				
+			}
+			
+			FileOutputStream fileOut = new FileOutputStream("data/objects.bin");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(GetSize());
+			/*for(int i=0; i<GetSize();i++){
+				out.writeObject(eventy.get(i));
+			}*/
+			out.close();
+			fileOut.close();
+		}
+		catch (IOException io)												
+			{System.out.println(io.getMessage());}
+
+		catch (Exception se)
+			{System.err.println("blad sec");}
+		
+	}
+	
+	public void LoadFromBin(){
+		try {
+			DataInputStream eventStream = 
+				new DataInputStream(new FileInputStream("data/events.bin"));
+			
+			int rozmiar = eventStream.readInt();
+			eventy.clear();
+			for(int i=0; i<rozmiar; i++){
+				eventy.add(new Event(eventStream.readUTF(), eventStream.readLong()));
+			}
+		}
+		catch (FileNotFoundException io)												
+			{System.out.println(io.getMessage());}
+	
+		catch (IOException io)												
+			{System.out.println(io.getMessage());} 
+		sort();
 	}
 }

@@ -22,6 +22,12 @@ public class Event implements Comparable<Event>, Comparator<Event>{
 		setDate(dataa);
 	}
 	
+	public Event (String name, long dataa){
+		this();
+		setName(name);
+		setDate(dataa);
+	}
+	
 	
 	public String getName() {
 		return name;
@@ -52,8 +58,16 @@ public class Event implements Comparable<Event>, Comparator<Event>{
 	    
 	}
 	
+	public void setDate(long dataa){
+		data.setTime(dataa);
+	}
+	
 	public String getDate(){
 		return sdf.format(data);
+	}
+	
+	public long getMiliseconds(){
+		return data.getTime();
 	}
 
 	public String toString(){
