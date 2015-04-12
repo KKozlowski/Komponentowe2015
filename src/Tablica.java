@@ -67,4 +67,8 @@ public class Tablica {
 	        }
 	    } while (zmiana);
 	}
+	
+	
 }
+
+

@@ -35,20 +35,14 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	
 	  private void writeObject(ObjectOutputStream o)
 	    throws IOException {  
-	    
 		  o.writeObject(name);
 		  o.writeObject(data);
-	    //o.writeObject(propertyOne);  
-	   // o.writeObject(propertyTwo);
 	  }
 	  
 	  private void readObject(ObjectInputStream o)
 	    throws IOException, ClassNotFoundException {  
-	    
 		  name = (String) o.readObject();
 		  data = (Date) o.readObject();
-	    //propertyOne = (String) o.readObject();  
-	    //propertyTwo = (String) o.readObject();
 	  }
 	
 	public String getName() {
