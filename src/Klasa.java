@@ -10,6 +10,9 @@ public class Klasa {
 		kont.saveToBin();
 		kont.loadFromBin();
 		kont.print();
+		kont.saveObjects();
+		kont.loadObjects();
+		kont.print();
 	}
 
 }

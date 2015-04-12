@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -5,12 +9,13 @@ import java.util.Comparator;
 //import java.util.GregorianCalendar;
 import java.util.Date;
 
-public class Event implements Comparable<Event>, Comparator<Event>{
+public class Event implements Comparable<Event>, Comparator<Event>, Serializable{
 	private String name;
 	private Date data = new Date();
 	private Comparator<Event> comparator;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	//private GregorianCalendar date = new GregorianCalendar();
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	
 
 	public Event(){
 		comparator = new DateComparator();
@@ -28,6 +33,23 @@ public class Event implements Comparable<Event>, Comparator<Event>{
 		setDate(dataa);
 	}
 	
+	  private void writeObject(ObjectOutputStream o)
+	    throws IOException {  
+	    
+		  o.writeObject(name);
+		  o.writeObject(data);
+	    //o.writeObject(propertyOne);  
+	   // o.writeObject(propertyTwo);
+	  }
+	  
+	  private void readObject(ObjectInputStream o)
+	    throws IOException, ClassNotFoundException {  
+	    
+		  name = (String) o.readObject();
+		  data = (Date) o.readObject();
+	    //propertyOne = (String) o.readObject();  
+	    //propertyTwo = (String) o.readObject();
+	  }
 	
 	public String getName() {
 		return name;

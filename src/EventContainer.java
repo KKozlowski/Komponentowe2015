@@ -68,15 +68,7 @@ public class EventContainer {
 			}
 			eventStream.close();
 			
-			//Zapisywanie ca³ych obiektów do pliku.
-			FileOutputStream fileOut = new FileOutputStream("data/objects.bin");
-			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(getSize());
-			for(int i=0; i<getSize();i++){
-				out.writeObject(eventy.get(i));
-			}
-			out.close();
-			fileOut.close();
+			
 		}
 		catch (IOException io)												
 			{System.out.println(io.getMessage());}
@@ -104,5 +96,56 @@ public class EventContainer {
 		catch (IOException io)												
 			{System.out.println(io.getMessage());} 
 		sort();
+	}
+	
+	public void saveObjects(){
+		try {
+			//Zapisywanie ca³ych obiektów do pliku.
+			FileOutputStream fileOut = new FileOutputStream("data/objects.bin");
+			
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			
+			out.writeInt(getSize());
+			
+			for(int i=0; i<getSize();i++){
+				out.writeObject(eventy.get(i));
+			}
+			
+			out.close();
+			fileOut.close();
+			
+		}
+		catch (Exception e)
+		{System.out.println("Nie udalo sie zapisac do pliku");}
+	}
+	
+	
+	
+	public void loadObjects(){
+		FileInputStream fileIn;
+		try {
+			fileIn = new FileInputStream("data/objects.bin");
+		} catch (FileNotFoundException e) {
+			System.out.println("Nie odnaleziono pliku z danymi.");
+			return;
+		}
+		try {
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			
+			int rozmiar = in.readInt();
+			eventy.clear();
+
+			for(int i=0; i<rozmiar;i++){
+				try {
+					Event obj = (Event)in.readObject();
+					eventy.add(obj);
+				} catch (ClassNotFoundException e) {
+					System.out.println("Nie odnaleziono klasy");
+					return;
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Wystapil blad podczas wczytywania danych");
+		}
 	}
 }
