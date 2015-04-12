@@ -6,10 +6,10 @@ public class Klasa {
 
 	public static void main(String[] args) {
 		EventContainer kont = new EventContainer();
-		kont.GetEvents();
-		kont.SaveToBin();
-		kont.LoadFromBin();
-		kont.Print();
+		kont.getEvents();
+		kont.saveToBin();
+		kont.loadFromBin();
+		kont.print();
 	}
 
 }

@@ -9,10 +9,10 @@ public class ArgReader {
 		for(int i=0; i<numberOfArgs; i++)
 			System.out.println("Argument" +i+": " + args[i]);
 		if(numberOfArgs >=3)
-			Oblicz(args[0], args[1], args[2]);
+			oblicz(args[0], args[1], args[2]);
 	}
 	
-	public void Oblicz(String one, String two, String sign){
+	public void oblicz(String one, String two, String sign){
 		double pierwsza, druga;
 		double wynik;
 		try{

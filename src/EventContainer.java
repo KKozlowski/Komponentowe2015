@@ -20,59 +20,61 @@ public class EventContainer {
 		
 		eventy.sort(ev.new DateComparator());
 		
-		PrintList(eventy);
+		printList(eventy);
 	}
 	
-	public void PrintList(ArrayList<Event> eventy){
+	public void printList(ArrayList<Event> eventy){
 		for (Event i : eventy)
 			System.out.println(i);
 		System.out.println();
 	}
 	
-	public void Print(){
-		PrintList(eventy);
+	public void print(){
+		printList(eventy);
 	}
 	
 	public void sort(){
 		eventy.sort(new Event().new DateComparator());
 	}
 	
-	public void GetEvents(){
+	public void getEvents(){
 		Inputter inp = new Inputter();
 		while(true){
-			String nazwa = inp.GetString("Podaj nazwe zdarzenia:");
-			String data = inp.GetString("Podaj date zdarzenia [dd/mm/yyyy]:");
+			String nazwa = inp.getString("Podaj nazwe zdarzenia:");
+			String data = inp.getString("Podaj date zdarzenia [dd/mm/yyyy]:");
 			if(nazwa.equals("0") && data.equals("0")) break;
 			Event ev = new Event(nazwa, data);
 			eventy.add(ev);
 			sort();
-			PrintList(eventy);
+			printList(eventy);
 		}
 	}
 	
-	public int GetSize(){
+	public int getSize(){
 		return eventy.size();
 	}
 	
-	public void SaveToBin(){
+	public void saveToBin(){
 		try {
 			DataOutputStream eventStream = 		// Strumien zapisujacy liczby
 				new DataOutputStream(new FileOutputStream("data/events.bin")); 
 			
-			eventStream.writeInt(GetSize());
-			for (int i=0; i< GetSize(); i++){
+			eventStream.writeInt(getSize());
+			for (int i=0; i< getSize(); i++){
 				//strumienTablicy.writeChars(eventy.get(i).getName());
 				eventStream.writeUTF(eventy.get(i).getName());
 				eventStream.writeLong(eventy.get(i).getMiliseconds());
 				
 			}
+			eventStream.close();
 			
+			//Zapisywanie ca³ych obiektów do pliku.
 			FileOutputStream fileOut = new FileOutputStream("data/objects.bin");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			out.writeObject(GetSize());
-			/*for(int i=0; i<GetSize();i++){
+			out.writeObject(getSize());
+			for(int i=0; i<getSize();i++){
 				out.writeObject(eventy.get(i));
-			}*/
+			}
 			out.close();
 			fileOut.close();
 		}
@@ -84,7 +86,7 @@ public class EventContainer {
 		
 	}
 	
-	public void LoadFromBin(){
+	public void loadFromBin(){
 		try {
 			DataInputStream eventStream = 
 				new DataInputStream(new FileInputStream("data/events.bin"));
@@ -94,6 +96,7 @@ public class EventContainer {
 			for(int i=0; i<rozmiar; i++){
 				eventy.add(new Event(eventStream.readUTF(), eventStream.readLong()));
 			}
+			eventStream.close();
 		}
 		catch (FileNotFoundException io)												
 			{System.out.println(io.getMessage());}

@@ -4,7 +4,7 @@ public class TrojkatPascala {
 
 	public TrojkatPascala(){
 		Inputter inp = new Inputter();
-		liczbaWierszy = inp.GetInt("Ile wierszy trojkata?");
+		liczbaWierszy = inp.getInt("Ile wierszy trojkata?");
 		wartosci = new int[liczbaWierszy][liczbaWierszy];
 		wylicz();
 	}

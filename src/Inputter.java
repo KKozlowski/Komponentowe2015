@@ -3,19 +3,19 @@ import javax.swing.JOptionPane;
 import java.io.*;
 
 public class Inputter {
-	public int GetInt(String request){
+	public int getInt(String request){
 		String ile;
 		ile = JOptionPane.showInputDialog(request);
 		return Integer.parseInt(ile);
 	}
 	
-	public String GetString(String request){
+	public String getString(String request){
 		String str;
 		str = JOptionPane.showInputDialog(request);
 		return str;
 	}
 	
-	public void SaveLoad(){
+	public void saveLoad(){
 		// ZAPIS DO PLIKU TEKSTOWEGO 
 		File plik = new File("pliczek.txt"); 		// Obiekt klasy File reprezentuje plik 
 									// w pamieci programu
@@ -51,10 +51,6 @@ public class Inputter {
 		
 		String tekstOdczytany = new String(buf);			// Konwersja zawartosci bufora na String
 		System.out.println("Odczytalem znaki: "+ tekstOdczytany); 	// Wydruk
-		
-		
-		
-		
-		
+
 	}	
 }

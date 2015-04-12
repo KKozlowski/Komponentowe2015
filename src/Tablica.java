@@ -15,24 +15,24 @@ public class Tablica {
 			druga[i] = 2*i+1;
 		}
 		
-		WypiszIntTab(druga);
+		wypiszIntTab(druga);
 	}
 	
-	public void WypiszIntTab(int[] tab){
+	public void wypiszIntTab(int[] tab){
 		for(int i : tab){
 			System.out.print(i+" ");
 		}
 		System.out.println();
 	}
 	
-	public void Randomizuj(int zakresStart, int zakresEnd){
+	public void randomizuj(int zakresStart, int zakresEnd){
 		Inputter inp = new Inputter();
-		int rozmiar = inp.GetInt("Ile liczb wylosowac?");
+		int rozmiar = inp.getInt("Ile liczb wylosowac?");
 		randomowa = new int[rozmiar];
 		for(int i = 0; i< randomowa.length; i++)
 			randomowa[i] = (int)(Math.random()*(zakresEnd-zakresStart) + zakresStart);
 		
-		WypiszIntTab(randomowa);
+		wypiszIntTab(randomowa);
 		int[] kopia=randomowa.clone();
 		long przed, po;
 		
@@ -42,7 +42,7 @@ public class Tablica {
 		po = System.nanoTime();
 		
 		System.out.println("Czas operacji "+(po - przed)/1000 + " mikrosekund");
-		WypiszIntTab(randomowa);
+		wypiszIntTab(randomowa);
 		
 		System.out.println();
 		System.out.println("SORTOWANIE: Babelkowa metoda");
@@ -50,7 +50,7 @@ public class Tablica {
 		babelekInt(kopia);
 		po = System.nanoTime();
 		System.out.println("Czas operacji "+(po - przed)/1000 + " mikrosekund");
-		WypiszIntTab(kopia);
+		wypiszIntTab(kopia);
 	}
 	
 	public void babelekInt(int[] tab) {
