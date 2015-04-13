@@ -8,16 +8,16 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.io.*;
 
-public class EventContainer {
+public class EventContainer implements ObjectContainer {
 	ArrayList<Event> eventy = new ArrayList<Event>();
 	
 	public EventContainer(){
 		try{
 			Event ev = new Event("Spotkanie", "02/03/2014");
 			Event ev2 = new Event("Spotkanie2", "05/03/2014");
-			eventy.add(ev);
-			eventy.add(ev2);
-			eventy.add(new Event("Spotkanie3", "05/02/2014"));
+			add(ev);
+			add(ev2);
+			add(new Event("Spotkanie3", "05/02/2014"));
 			eventy.sort(ev.new DateComparator());
 		}
 		catch (DateFormatException d) {
@@ -157,5 +157,11 @@ public class EventContainer {
 		} catch (IOException e) {
 			System.out.println("Wystapil blad podczas wczytywania danych");
 		}
+	}
+
+	@Override
+	public void add(Object added) {
+		eventy.add((Event) added);
+		
 	}
 }

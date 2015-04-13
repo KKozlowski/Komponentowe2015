@@ -9,7 +9,7 @@ import java.util.Comparator;
 //import java.util.GregorianCalendar;
 import java.util.Date;
 
-public class Event implements Comparable<Event>, Comparator<Event>, Serializable{
+public class Event implements Comparable<Event>, Comparator<Event>, Serializable, Individual, Chronologic{
 	private String name;
 	private Date data = new Date();
 	private Comparator<Event> comparator;
@@ -55,7 +55,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	}
 	
 	public void setDate (String dat) throws DateFormatException{
-	    java.util.Date d; 
+	    Date d; 
 	    try {
 	    	data = sdf.parse(dat);
 	    	/*date.setTime(d);
