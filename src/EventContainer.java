@@ -12,13 +12,19 @@ public class EventContainer {
 	ArrayList<Event> eventy = new ArrayList<Event>();
 	
 	public EventContainer(){
-		Event ev = new Event("Spotkanie", "02/03/2014");
-		Event ev2 = new Event("Spotkanie2", "05/03/2014");
-		eventy.add(ev);
-		eventy.add(ev2);
-		eventy.add(new Event("Spotkanie3", "05/02/2014"));
+		try{
+			Event ev = new Event("Spotkanie", "02/03/2014");
+			Event ev2 = new Event("Spotkanie2", "05/03/2014");
+			eventy.add(ev);
+			eventy.add(ev2);
+			eventy.add(new Event("Spotkanie3", "05/02/2014"));
+			eventy.sort(ev.new DateComparator());
+		}
+		catch (DateFormatException d) {
+			System.out.println(d.getMessage());
+		}
 		
-		eventy.sort(ev.new DateComparator());
+		
 		
 		printList(eventy);
 	}
@@ -43,9 +49,13 @@ public class EventContainer {
 			String nazwa = inp.getString("Podaj nazwe zdarzenia:");
 			String data = inp.getString("Podaj date zdarzenia [dd/mm/yyyy]:");
 			if(nazwa.equals("0") && data.equals("0")) break;
-			Event ev = new Event(nazwa, data);
-			eventy.add(ev);
-			sort();
+			try{
+				Event ev = new Event(nazwa, data);
+				eventy.add(ev);
+				sort();
+			} catch (DateFormatException d) {
+				System.out.println(d.getMessage());
+			}
 			printList(eventy);
 		}
 	}

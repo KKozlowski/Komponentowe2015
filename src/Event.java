@@ -21,10 +21,11 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		comparator = new DateComparator();
 	}
 	
-	public Event(String name, String dataa) {
+	public Event(String name, String dataa) throws DateFormatException {
 		this();
 		setName(name);
 		setDate(dataa);
+		
 	}
 	
 	public Event (String name, long dataa){
@@ -53,7 +54,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		this.name = name;
 	}
 	
-	public void setDate (String dat){
+	public void setDate (String dat) throws DateFormatException{
 	    java.util.Date d; 
 	    try {
 	    	data = sdf.parse(dat);
@@ -69,7 +70,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		    java.util.Date yesterday = date.getTime();
 		    System.out.println("Yesterdays Date = " + sdf.format(yesterday));*/
 	    } catch ( ParseException pe){
-	    	System.out.println("Bledny format daty.");
+	    	throw new DateFormatException();
 	    }
 	    
 	}
