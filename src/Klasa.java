@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Klasa {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		SerializowanaTablica ser = new SerializowanaTablica(15,70);
 		ser.wypisz();
 		ser.save("data/inty.bin");
@@ -23,7 +23,7 @@ public class Klasa {
 		kont.print();
 		
 		
-	}
+	}*/
 
 }
 

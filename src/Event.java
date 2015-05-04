@@ -5,8 +5,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
-//import java.util.Calendar;
-//import java.util.GregorianCalendar;
 import java.util.Date;
 
 public class Event implements Comparable<Event>, Comparator<Event>, Serializable, Individual, Chronologic{
@@ -25,7 +23,6 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		this();
 		setName(name);
 		setDate(dataa);
-		
 	}
 	
 	public Event (String name, long dataa){
