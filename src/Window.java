@@ -69,6 +69,9 @@ public class Window extends JFrame {
 		kont.saveObjects();
 		kont.loadObjects();
 		kont.print();
+		
+		SecondaryWindow w = new SecondaryWindow();
+		w.open();
 	}
 
 	private class SwingAction extends AbstractAction {
