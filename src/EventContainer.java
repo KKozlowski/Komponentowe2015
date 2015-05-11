@@ -11,6 +11,7 @@ import java.io.*;
 
 public class EventContainer implements ObjectContainer {
 	ArrayList<Event> eventy = new ArrayList<Event>();
+	Window window;
 	
 	public EventContainer(){
 		try{
@@ -28,6 +29,11 @@ public class EventContainer implements ObjectContainer {
 		
 		
 		printList(eventy);
+	}
+	
+	public EventContainer(Window mainWin){
+		this();
+		window = mainWin;
 	}
 	
 	public void printList(ArrayList<Event> eventy){
@@ -50,14 +56,19 @@ public class EventContainer implements ObjectContainer {
 			String nazwa = inp.getString("Podaj nazwe zdarzenia:");
 			String data = inp.getString("Podaj date zdarzenia [dd/mm/yyyy]:");
 			if(nazwa.equals("0") && data.equals("0")) break;
-			try{
-				Event ev = new Event(nazwa, data);
-				eventy.add(ev);
-				sort();
-			} catch (DateFormatException d) {
-				System.out.println(d.getMessage());
-			}
+			addEvent(nazwa, data);
+			sort();
 			printList(eventy);
+		}
+	}
+	
+	public void addEvent(String nazwa, String data){
+		try{
+			Event ev = new Event(nazwa, data);
+			eventy.add(ev);
+			
+		} catch (DateFormatException d) {
+			System.out.println(d.getMessage());
 		}
 	}
 	
