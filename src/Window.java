@@ -10,11 +10,19 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.SwingConstants;
 import java.awt.CardLayout;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 
 public class Window extends JFrame {
 	private EventContainer events = new EventContainer();
 	private JPanel contentPane;
+	private JList eventList;
 	private final Action action = new SwingAction();
 
 	/**
@@ -38,6 +46,7 @@ public class Window extends JFrame {
 	 */
 	public Window() {
 		//Code();
+		events.SetWindow(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 514, 300);
 		contentPane = new JPanel();
@@ -46,9 +55,21 @@ public class Window extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton addEventButton = new JButton("New button");
-		addEventButton.setBounds(295, 0, 203, 98);
+		addEventButton.setBounds(295, 11, 193, 98);
 		addEventButton.setAction(action);
 		contentPane.add(addEventButton);
+		
+		eventList = new JList();
+		eventList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if(e.getValueIsAdjusting())
+					System.out.println(eventList.getSelectedIndex());
+			}
+		});
+		eventList.setBounds(10, 11, 275, 239);
+		contentPane.add(eventList);
+		
+		updateEventList();
 	}
 	
 	private void Code(){	
@@ -91,5 +112,9 @@ public class Window extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 		}
+	}
+	
+	public void updateEventList(){
+		eventList.setListData(events.ToStringArray());
 	}
 }

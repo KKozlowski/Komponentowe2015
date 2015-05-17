@@ -174,6 +174,20 @@ public class EventContainer implements ObjectContainer {
 	@Override
 	public void add(Object added) {
 		eventy.add((Event) added);
+		if (window!=null) window.updateEventList();
+	}
+	
+	public String[] ToStringArray(){
+		ArrayList<String> strings = new ArrayList<String>();
+		for(Event e : eventy)
+			strings.add(e.toString());
 		
+		String[] result = new String[strings.size()];
+		result = strings.toArray(result);
+		return result;
+	}
+	
+	public void SetWindow(Window win){
+		window = win;
 	}
 }
