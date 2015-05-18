@@ -1,3 +1,5 @@
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -5,15 +7,20 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.*;
 
+import com.thoughtworks.xstream.XStream;
+
 public class EventContainer implements ObjectContainer {
 	ArrayList<Event> eventy = new ArrayList<Event>();
 	Window window;
+	XStream xstream;
 	
 	public EventContainer(){
+		xstream = new XStream();
 		try{
 			Event ev = new Event("Spotkanie", "02/03/2014");
 			Event ev2 = new Event("Spotkanie2", "05/03/2014");
@@ -21,12 +28,17 @@ public class EventContainer implements ObjectContainer {
 			add(ev2);
 			add(new Event("Spotkanie3", "05/02/2014"));
 			eventy.sort(ev.new DateComparator());
+			SerializeXstream();
+			SerializeXmlJava();
+			//DeserializeXmlJava();
 		}
 		catch (DateFormatException d) {
 			System.out.println(d.getMessage());
 		}
 		
-		
+		DB db = new DB();
+        db.dbConnect(
+     "jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
 		
 		printList(eventy);
 	}
@@ -190,4 +202,62 @@ public class EventContainer implements ObjectContainer {
 	public void SetWindow(Window win){
 		window = win;
 	}
+	
+	public void SerializeXstream(){
+		String serial = xstream.toXML(eventy);
+		System.out.println(serial);
+	}
+	
+	public void SerializeXmlJava(){
+		XMLEncoder encoder;
+		try {
+			encoder = new XMLEncoder(
+			      new BufferedOutputStream(
+			        new FileOutputStream("XML.xml")));
+			encoder.writeObject(eventy);
+	        encoder.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void DeserializeXmlJava(){
+		XMLDecoder decoder;
+		try {
+			decoder = new XMLDecoder(new BufferedInputStream(
+                new FileInputStream("XML.xml")));
+			
+			ArrayList<Event> readObject = (ArrayList<Event>)decoder.readObject();
+			eventy = readObject;
+	        decoder.close();
+	        window.updateEventList();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+	}
 }
+
+class DB
+{
+    public DB() {}
+
+    public void dbConnect(String db_connect_string, 
+  String db_userid, String db_password)
+    {
+        try
+        {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(
+    db_connect_string, db_userid, db_password);
+            System.out.println("connected");
+            
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+};

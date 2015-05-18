@@ -104,6 +104,10 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 			return arg0.name.compareTo(arg1.name);
 		}
 		
+		@Override
+		public String toString(){
+			return "NameComparator";
+		}
 	}
 	
 	class DateComparator implements Comparator<Event>{
@@ -117,5 +121,9 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 			return 0;
 		}
 		
+		@Override
+		public String toString(){
+			return "DateComparator";
+		}
 	}
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_45" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="Event">
+    <void property="date">
+     <string>05/02/2014</string>
+    </void>
+    <void property="name">
+     <string>Spotkanie3</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Event">
+    <void property="date">
+     <string>02/03/2014</string>
+    </void>
+    <void property="name">
+     <string>Spotkanie</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="Event">
+    <void property="date">
+     <string>05/03/2014</string>
+    </void>
+    <void property="name">
+     <string>Spotkanie2</string>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

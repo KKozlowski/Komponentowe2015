@@ -6,15 +6,22 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.AbstractAction;
+
 import java.awt.event.ActionEvent;
+
 import javax.swing.Action;
 import javax.swing.SwingConstants;
+
 import java.awt.CardLayout;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+
+import com.thoughtworks.xstream.XStream;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -46,6 +53,7 @@ public class Window extends JFrame {
 	 */
 	public Window() {
 		//Code();
+		XStream xst = new XStream();
 		events.SetWindow(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 514, 300);
