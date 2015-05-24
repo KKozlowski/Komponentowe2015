@@ -4,26 +4,14 @@ import java.io.IOException;
 
 public class Klasa {
 
-	/*public static void main(String[] args) {
-		SerializowanaTablica ser = new SerializowanaTablica(15,70);
-		ser.wypisz();
-		ser.save("data/inty.bin");
-		ser.load("data/inty.bin");
-		ser.wypisz();
-		ser.sortuj();
-		ser.wypisz();
-		
-		EventContainer kont = new EventContainer();
-		kont.getEvents();
-		kont.saveToBin();
-		kont.loadFromBin();
-		kont.print();
-		kont.saveObjects();
-		kont.loadObjects();
-		kont.print();
-		
-		
-	}*/
+	public static void main(String[] args) {
+		try {
+			Window frame = new Window();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
 

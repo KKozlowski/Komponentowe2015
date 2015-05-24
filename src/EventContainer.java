@@ -28,17 +28,11 @@ public class EventContainer implements ObjectContainer {
 			add(ev2);
 			add(new Event("Spotkanie3", "05/02/2014"));
 			eventy.sort(ev.new DateComparator());
-			SerializeXstream();
-			SerializeXmlJava();
-			//DeserializeXmlJava();
 		}
 		catch (DateFormatException d) {
 			System.out.println(d.getMessage());
 		}
 		
-		DB db = new DB();
-        db.dbConnect(
-     "jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
 		
 		printList(eventy);
 	}
@@ -46,6 +40,17 @@ public class EventContainer implements ObjectContainer {
 	public EventContainer(Window mainWin){
 		this();
 		window = mainWin;
+		System.out.println(window);
+		SerializeSqlServer();
+		SerializeXmlJava();
+		DeserializeXmlJava();
+		DeserializeXstream();
+		try {
+			add(new Event("Hue", "11/11/2011"));
+		} catch (DateFormatException e) {
+			e.printStackTrace();
+		}
+		window.updateEventList();
 	}
 	
 	public void printList(ArrayList<Event> eventy){
@@ -205,7 +210,41 @@ public class EventContainer implements ObjectContainer {
 	
 	public void SerializeXstream(){
 		String serial = xstream.toXML(eventy);
-		System.out.println(serial);
+		FileOutputStream fos = null;
+		try {
+		    fos = new FileOutputStream("XXML.xml");
+		    fos.write("<?xml version=\"1.0\"?>".getBytes("UTF-8")); 
+		    byte[] bytes = serial.getBytes("UTF-8");
+		    fos.write(bytes);
+
+		} catch(Exception e) {
+		    e.printStackTrace(); 
+		} finally {
+		    if(fos!=null) {
+		        try{ 
+		            fos.close();
+		        } catch (IOException e) {
+		            e.printStackTrace(); 
+		        }
+		    }
+		}
+	}
+	
+	public void DeserializeXstream(){
+		File file = new File("XXML.xml");
+		byte[] bytes = new byte[(int) file.length()];
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			fis.read(bytes);
+			String str = new String(bytes);
+			System.out.println(str);
+			eventy = (ArrayList<Event>)xstream.fromXML(str);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void SerializeXmlJava(){
@@ -216,6 +255,7 @@ public class EventContainer implements ObjectContainer {
 			        new FileOutputStream("XML.xml")));
 			encoder.writeObject(eventy);
 	        encoder.close();
+	        
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,6 +263,7 @@ public class EventContainer implements ObjectContainer {
 	}
 	
 	public void DeserializeXmlJava(){
+		
 		XMLDecoder decoder;
 		try {
 			decoder = new XMLDecoder(new BufferedInputStream(
@@ -231,33 +272,19 @@ public class EventContainer implements ObjectContainer {
 			ArrayList<Event> readObject = (ArrayList<Event>)decoder.readObject();
 			eventy = readObject;
 	        decoder.close();
-	        window.updateEventList();
+	        
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
 	}
+	
+	public void SerializeSqlServer(){
+		SqlServerDatabase db = new SqlServerDatabase();
+        db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
+        //db.executeWithResult("use HR; select last_name from employees; drop database huhue;");
+        db.execute("drop database componentProject");
+        db.execute("create database componentProject");
+	}
 }
-
-class DB
-{
-    public DB() {}
-
-    public void dbConnect(String db_connect_string, 
-  String db_userid, String db_password)
-    {
-        try
-        {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(
-    db_connect_string, db_userid, db_password);
-            System.out.println("connected");
-            
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-};

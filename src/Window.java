@@ -27,7 +27,7 @@ import java.awt.event.FocusEvent;
 
 
 public class Window extends JFrame {
-	private EventContainer events = new EventContainer();
+	private EventContainer events;
 	private JPanel contentPane;
 	private JList eventList;
 	private final Action action = new SwingAction();
@@ -35,7 +35,7 @@ public class Window extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -46,7 +46,7 @@ public class Window extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
@@ -54,7 +54,7 @@ public class Window extends JFrame {
 	public Window() {
 		//Code();
 		XStream xst = new XStream();
-		events.SetWindow(this);
+		events = new EventContainer(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 514, 300);
 		contentPane = new JPanel();
@@ -123,6 +123,6 @@ public class Window extends JFrame {
 	}
 	
 	public void updateEventList(){
-		eventList.setListData(events.ToStringArray());
+		if (eventList != null) eventList.setListData(events.ToStringArray());
 	}
 }
