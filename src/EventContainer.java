@@ -40,8 +40,7 @@ public class EventContainer implements ObjectContainer {
 	public EventContainer(Window mainWin){
 		this();
 		window = mainWin;
-		System.out.println(window);
-		SerializeSqlServer();
+		
 		SerializeXmlJava();
 		DeserializeXmlJava();
 		DeserializeXstream();
@@ -50,6 +49,8 @@ public class EventContainer implements ObjectContainer {
 		} catch (DateFormatException e) {
 			e.printStackTrace();
 		}
+		SerializeSqlServer();
+		DeserializeSqlServer();
 		window.updateEventList();
 	}
 	
@@ -237,7 +238,7 @@ public class EventContainer implements ObjectContainer {
 			FileInputStream fis = new FileInputStream(file);
 			fis.read(bytes);
 			String str = new String(bytes);
-			System.out.println(str);
+			//System.out.println(str);
 			eventy = (ArrayList<Event>)xstream.fromXML(str);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -284,7 +285,30 @@ public class EventContainer implements ObjectContainer {
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
         //db.executeWithResult("use HR; select last_name from employees; drop database huhue;");
-        db.execute("drop database componentProject");
-        db.execute("create database componentProject");
+        db.execute("USE [master]");
+        db.execute("IF OBJECT_ID('componentProject') = NULL create database componentProject; ");
+        db.execute("use componentProject; drop table events; create table events (id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), primary key (id));");
+        StringBuilder finalUpdate = new StringBuilder();
+        for(Event e : eventy){
+        	finalUpdate.append("insert into events(nazwa,data) values ('"+e.getName()+"', '"+ e.getDate() +"'); ");
+        }
+        
+        db.execute(finalUpdate.toString());
+	}
+	
+	public void DeserializeSqlServer(){
+		SqlServerDatabase db = new SqlServerDatabase();
+        db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
+        ResultSet rs = db.executeWithResult("use componentProject; select nazwa, data from events");
+        try{
+        	while (rs.next()) {
+        	  String nazwa = rs.getString("nazwa");
+        	  String data = rs.getString("data");
+        	  System.out.println(nazwa + " " + data);
+        	}
+        }
+        catch(SQLException s){
+        	s.printStackTrace();
+        }
 	}
 }

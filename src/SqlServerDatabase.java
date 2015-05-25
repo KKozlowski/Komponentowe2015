@@ -52,7 +52,7 @@ public class SqlServerDatabase {
     	try {
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
     }
 }
