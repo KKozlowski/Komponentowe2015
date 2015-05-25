@@ -51,6 +51,7 @@ public class EventContainer implements ObjectContainer {
 		}
 		SerializeSqlServer();
 		DeserializeSqlServer();
+		SerializeSqlite();
 		window.updateEventList();
 	}
 	
@@ -310,5 +311,11 @@ public class EventContainer implements ObjectContainer {
         catch(SQLException s){
         	s.printStackTrace();
         }
+	}
+	
+	public void SerializeSqlite(){
+		SqliteDatabase db= new SqliteDatabase();
+		db.dbConnect();
+        db.execute("create table if not exists events(id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), primary key (id))");
 	}
 }
