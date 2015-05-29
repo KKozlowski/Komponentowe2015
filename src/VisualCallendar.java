@@ -16,6 +16,9 @@ import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JTextPane;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 
 
@@ -24,13 +27,18 @@ public class VisualCallendar extends JFrame {
 	String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	
 	private JPanel contentPane;
+	private JLabel monthLabel;
 
+	private int currentMonth;
+	private int currentYear;
 
 	/**
 	 * Create the frame.
 	 */
 	
 	public ArrayList<ArrayList<GridButton>> days = new ArrayList<ArrayList<GridButton>>();
+	private final Action previousMonth = new SwingAction();
+	private final Action nextMonth = new SwingAction_1();
 	
 	
 	public  VisualCallendar() {
@@ -49,6 +57,22 @@ public class VisualCallendar extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(6, 7, 0, 0));
 		
+		monthLabel = new JLabel("Month");
+		monthLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		monthLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		monthLabel.setBounds(142, 28, 177, 47);
+		contentPane.add(monthLabel);
+		
+		JButton prevButton = new JButton("<");
+		prevButton.setAction(previousMonth);
+		prevButton.setBounds(10, 46, 89, 23);
+		contentPane.add(prevButton);
+		
+		JButton nextButton = new JButton(">");
+		nextButton.setAction(nextMonth);
+		nextButton.setBounds(359, 46, 89, 23);
+		contentPane.add(nextButton);
+		
 		
 		for(int i=0; i<6; i++){
 			days.add(new ArrayList<GridButton>());
@@ -61,15 +85,41 @@ public class VisualCallendar extends JFrame {
 		
 		GregorianCalendar g = new GregorianCalendar();
 		//updateCalendar(g.get(Calendar.MONTH), Calendar.YEAR);
-		updateCalendar(7,2015);
+		updateCalendar(4,2015);
 		
 	}
 	
 	private void updateCalendar(int month, int year) { //0 is January
+		reset();
+		currentMonth = month;
+		currentYear = year;
 		GregorianCalendar gregor = new GregorianCalendar(year, month, 1);
-		int dayOfWeek = gregor.get(GregorianCalendar.DAY_OF_WEEK);
-		System.out.println(dayOfWeek);
-		days.get(0).get(dayOfWeek-2).setNumber(1);
+		//gregor.getActualMaximum(Calendar.DAY_OF_MONTH)
+		for(int i= 0; i< 31; i++){
+			if (gregor.get(Calendar.MONTH) == currentMonth){
+				int weekOfMonth = gregor.get(Calendar.WEEK_OF_MONTH);
+				int dayOfWeek = gregor.get(GregorianCalendar.DAY_OF_WEEK);
+				dayOfWeek-=2;
+				if(dayOfWeek == -1) dayOfWeek = 6;
+
+				days.get(weekOfMonth).get(dayOfWeek).setNumber(gregor.get(Calendar.DAY_OF_MONTH));
+				gregor.add(Calendar.DAY_OF_MONTH, 1);
+			}
+		}
+		
+		monthLabel.setText(months[month] + " " + year);
+	} 
+	
+	private void updateCalendar(){
+		updateCalendar(currentMonth, currentYear);
+	}
+	
+	private void reset(){
+		for(int i=0; i<6; i++){
+			for(int k=0; k<7; k++){
+				days.get(i).get(k).clear();
+			}
+		}
 	}
 
 	private class GridButton extends JButton{
@@ -97,6 +147,11 @@ public class VisualCallendar extends JFrame {
 			setLabel(Integer.toString(dayN));
 		}
 		
+		public void clear(){
+			setLabel("");
+			dayNumber = -1;
+		}
+		
 		private class BeClicked extends AbstractAction {
 			public BeClicked() {
 				putValue(SHORT_DESCRIPTION, "Some short description");
@@ -107,7 +162,36 @@ public class VisualCallendar extends JFrame {
 			}
 			
 			public void actionPerformed(ActionEvent e) {
+				if(dayNumber >0 ) System.out.println(dayNumber);
 			}
+		}
+	}
+	private class SwingAction extends AbstractAction {
+		public SwingAction() {
+			putValue(NAME, "<");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			currentMonth-=1;
+			if(currentMonth<0) {
+				currentMonth=11;
+				currentYear-=1;
+			}
+			updateCalendar();
+		}
+	}
+	private class SwingAction_1 extends AbstractAction {
+		public SwingAction_1() {
+			putValue(NAME, ">");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			currentMonth+=1;
+			if(currentMonth>11) {
+				currentMonth=0;
+				currentYear+=1;
+			}
+			updateCalendar();
 		}
 	}
 }
