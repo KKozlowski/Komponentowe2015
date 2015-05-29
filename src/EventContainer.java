@@ -40,7 +40,7 @@ public class EventContainer implements ObjectContainer {
 	public EventContainer(Window mainWin){
 		this();
 		window = mainWin;
-		
+		SerializeXstream();
 		SerializeXmlJava();
 		DeserializeXmlJava();
 		DeserializeXstream();
@@ -159,8 +159,6 @@ public class EventContainer implements ObjectContainer {
 		catch (Exception e)
 		{System.out.println("Nie udalo sie zapisac do pliku");}
 	}
-	
-	
 	
 	public void loadObjects(){
 		FileInputStream fileIn;

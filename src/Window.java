@@ -101,7 +101,7 @@ public class Window extends JFrame {
 		//w.open();
 		
 		EventAdder a = new EventAdder(events);
-		a.open();
+		a.setVisible(true);
 	}
 
 	private class SwingAction extends AbstractAction {
@@ -111,6 +111,8 @@ public class Window extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 			Code();
+			VisualCallendar vc = new VisualCallendar();
+			vc.setVisible(true);
 		}
 	}
 	private class SwingAction_1 extends AbstractAction {

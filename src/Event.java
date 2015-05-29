@@ -10,6 +10,7 @@ import java.util.Date;
 public class Event implements Comparable<Event>, Comparator<Event>, Serializable, Individual, Chronologic{
 	private String name;
 	private Date data = new Date();
+	private String description;
 	private Comparator<Event> comparator;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	//private GregorianCalendar date = new GregorianCalendar();
@@ -17,6 +18,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 
 	public Event(){
 		comparator = new DateComparator();
+		description = "";
 	}
 	
 	public Event(String name, String dataa) throws DateFormatException {
@@ -31,17 +33,24 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		setDate(dataa);
 	}
 	
-	  private void writeObject(ObjectOutputStream o)
-	    throws IOException {  
-		  o.writeObject(name);
-		  o.writeObject(data);
-	  }
+	public Event (String name, String dataa, String description) throws DateFormatException{
+		this(name, dataa);
+		setDescription(description);
+	}
+	
+	 private void writeObject(ObjectOutputStream o)
+	   throws IOException {  
+		 o.writeObject(name);
+		 o.writeObject(data);
+		 o.writeObject(description);
+	 }
 	  
-	  private void readObject(ObjectInputStream o)
+	 private void readObject(ObjectInputStream o)
 	    throws IOException, ClassNotFoundException {  
-		  name = (String) o.readObject();
-		  data = (Date) o.readObject();
-	  }
+		 name = (String) o.readObject();
+		 data = (Date) o.readObject();
+		 description = (String) o.readObject();
+	 }
 	
 	public String getName() {
 		return name;
@@ -49,6 +58,14 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setDescription(String desc){
+		this.description = desc;
+	}
+	
+	public String getDescription(){
+		return description;
 	}
 	
 	public void setDate (String dat) throws DateFormatException{
