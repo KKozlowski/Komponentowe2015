@@ -1,6 +1,6 @@
 
 public interface Chronologic {
-	String getDate();
+	String getDateHour();
 	void setDate(long dataa);
 	void setDate (String dat) throws DateFormatException;
 }

@@ -11,6 +11,8 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	private String name;
 	private Date data = new Date();
 	private String description;
+	private String place;
+	private int reminderTime;
 	private Comparator<Event> comparator;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	private static SimpleDateFormat sdfHour = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -46,6 +48,8 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		 o.writeObject(name);
 		 o.writeObject(data);
 		 o.writeObject(description);
+		 o.writeObject(place);
+		 o.writeObject(reminderTime);
 	 }
 	  
 	 private void readObject(ObjectInputStream o)
@@ -53,6 +57,8 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		 name = (String) o.readObject();
 		 data = (Date) o.readObject();
 		 description = (String) o.readObject();
+		 place = (String) o.readObject();
+		 reminderTime = (int)o.readObject();
 	 }
 	
 	public String getName() {
@@ -69,6 +75,26 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	
 	public String getDescription(){
 		return description;
+	}
+	
+	public void setPlace(String desc){
+		this.place = desc;
+	}
+	
+	public String getPlace(){
+		return place;
+	}
+	
+	public void setReminder(String mm){
+		this.reminderTime = Integer.parseInt(mm);
+	}
+	
+	public void setReminder(int mm){
+		this.reminderTime = mm;
+	}
+	
+	public int getReminder(){
+		return reminderTime;
 	}
 	
 	public void setDate (String dat) throws DateFormatException{
@@ -95,8 +121,17 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		data.setTime(dataa);
 	}
 	
-	public String getDate(){
+	public Date getDate(){
+		return data;
+	}
+	
+	public String getDateHour(){
 		return sdfHour.format(data);
+	}
+	
+	public String getHour(){
+		SimpleDateFormat hour = new SimpleDateFormat("HH:mm");
+		return hour.format(data);
 	}
 	
 	public long getMiliseconds(){
@@ -104,7 +139,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	}
 
 	public String toString(){
-		return getName() + " [" + getDate() + "]";
+		return getName() + " [" + getDateHour() + "]";
 	}
 	
 	public int compareTo(Event ev){

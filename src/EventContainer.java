@@ -295,7 +295,7 @@ public class EventContainer implements ObjectContainer {
         db.execute("use componentProject; drop table events; create table events (id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), primary key (id));");
         StringBuilder finalUpdate = new StringBuilder();
         for(Event e : eventy){
-        	finalUpdate.append("insert into events(nazwa,data) values ('"+e.getName()+"', '"+ e.getDate() +"'); ");
+        	finalUpdate.append("insert into events(nazwa,data) values ('"+e.getName()+"', '"+ e.getDateHour() +"'); ");
         }
         
         db.execute(finalUpdate.toString());

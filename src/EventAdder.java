@@ -30,6 +30,9 @@ import javax.swing.JTextArea;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JEditorPane;
+
+import sun.security.krb5.internal.crypto.DesCbcCrcEType;
+
 import java.awt.Dimension;
 
 
@@ -44,6 +47,7 @@ public class EventAdder extends JFrame {
 	private JTextField hourField;
 	private JTextField placeField;
 	private JTextField descriptionField;
+	private JTextField reminderField;
 
 	/**
 	 * Create the frame.
@@ -54,7 +58,7 @@ public class EventAdder extends JFrame {
 		events = ev;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
-		setBounds(100, 100, 300, 360);
+		setBounds(100, 100, 300, 420);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -81,17 +85,32 @@ public class EventAdder extends JFrame {
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("BUMP");
+				boolean noProblems = true;
+				toAdd.setName(nameField.getText());
+				toAdd.setDescription(descriptionField.getText());
 				try {
 					toAdd.setDate(action.getLabel());
-					toAdd.setName(nameField.getText());
 					toAdd.setDateHour(action.getLabel() + " " + hourField.getText());
+					hourField.setBackground(Color.WHITE);
+				} catch (DateFormatException d) {
+					hourField.setBackground(Color.RED);
+					noProblems = false;
+				}
+				try {
+					toAdd.setReminder(reminderField.getText());
+					reminderField.setBackground(Color.WHITE);
+				} catch (NumberFormatException n){
+					reminderField.setBackground(Color.RED);
+					noProblems = false;
+				}
+				if(noProblems){
+					
 					events.add(toAdd);
 					events.sort();
 					events.print();
 					dispose();
-				} catch (DateFormatException d) {
-					hourField.setBackground(Color.RED);
 				}
+				
 			}
 		});
 		
@@ -104,11 +123,15 @@ public class EventAdder extends JFrame {
 		lblOpisZdarzenia.setBounds(10, 210, 264, 14);
 		contentPane.add(lblOpisZdarzenia);
 		
+		JLabel lblCzasprzypomnienia = new JLabel("Czas przypomnienia [mm]");
+		lblCzasprzypomnienia.setBounds(10, 269, 264, 14);
+		contentPane.add(lblCzasprzypomnienia);
+		
 		descriptionField = new JTextField();
 		descriptionField.setColumns(10);
 		descriptionField.setBounds(10, 235, 264, 20);
 		contentPane.add(descriptionField);
-		addButton.setBounds(10, 266, 264, 23);
+		addButton.setBounds(10, 330, 264, 23);
 		contentPane.add(addButton);
 		
 		JButton cancelButton = new JButton("Anuluj");
@@ -117,7 +140,7 @@ public class EventAdder extends JFrame {
 				dispose();
 			}
 		});
-		cancelButton.setBounds(10, 293, 264, 23);
+		cancelButton.setBounds(10, 357, 264, 23);
 		contentPane.add(cancelButton);
 		
 		JButton calendarOpener = new JButton("New button");
@@ -137,6 +160,12 @@ public class EventAdder extends JFrame {
 		hourField.setBounds(10, 75, 264, 20);
 		contentPane.add(hourField);
 		hourField.setColumns(10);
+		
+		reminderField = new JTextField();
+		reminderField.setText("0");
+		reminderField.setBounds(10, 292, 264, 20);
+		contentPane.add(reminderField);
+		reminderField.setColumns(10);
 	}
 	
 	void openCalendar(){
