@@ -292,7 +292,7 @@ public class EventContainer implements ObjectContainer {
         //db.executeWithResult("use HR; select last_name from employees; drop database huhue;");
         db.execute("USE [master]");
         db.execute("IF OBJECT_ID('componentProject') = NULL create database componentProject; ");
-        db.execute("use componentProject; drop table events; create table events (id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), primary key (id));");
+        db.execute("use componentProject; IF OBJECT_ID('dbo.events', 'U') IS NOT NULL drop table events; create table events (id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), primary key (id));");
         StringBuilder finalUpdate = new StringBuilder();
         for(Event e : eventy){
         	finalUpdate.append("insert into events(nazwa,data) values ('"+e.getName()+"', '"+ e.getDateHour() +"'); ");

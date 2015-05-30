@@ -24,6 +24,9 @@ import com.thoughtworks.xstream.XStream;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JMenuBar;
 
 
 public class Window extends JFrame {
@@ -35,32 +38,35 @@ public class Window extends JFrame {
 	private final Action action_1 = new SwingAction_2();
 	
 	private int selectedItemIndex = -1;
-
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Window frame = new Window();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
+	private JMenuBar menuBar;
+	private JMenu mnFileMenu;
+	private JMenuItem saveButton;
+	private JMenuItem loadButton;
+	private final Action saveAction = new SaveAction();
 
 	/**
 	 * Create the frame.
 	 */
 	public Window() {
+		setTitle("Organizer");
 		//Code();
 		XStream xst = new XStream();
 		events = new EventContainer(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 514, 300);
+		setBounds(100, 100, 514, 353);
+		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		mnFileMenu = new JMenu("File");
+		menuBar.add(mnFileMenu);
+		
+		saveButton = new JMenuItem("Save");
+		saveButton.setAction(saveAction);
+		mnFileMenu.add(saveButton);
+		
+		loadButton = new JMenuItem("Load");
+		mnFileMenu.add(loadButton);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -85,7 +91,7 @@ public class Window extends JFrame {
 		deleteEventButton.setAction(action_1);
 		deleteEventButton.setBounds(295, 75, 193, 53);
 		contentPane.add(deleteEventButton);
-		eventList.setBounds(10, 11, 275, 239);
+		eventList.setBounds(10, 11, 275, 271);
 		contentPane.add(eventList);
 		
 		events.sort();
@@ -135,6 +141,16 @@ public class Window extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			events.removeAt(selectedItemIndex);
 			updateEventList();
+		}
+	}
+	private class SaveAction extends AbstractAction {
+		public SaveAction() {
+			putValue(NAME, "Save");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			SaveLoadWindow slw = new SaveLoadWindow(events, true);
+			slw.setVisible(true);
 		}
 	}
 }
