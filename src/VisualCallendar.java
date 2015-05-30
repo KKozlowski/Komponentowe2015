@@ -25,6 +25,7 @@ import java.awt.Font;
 public class VisualCallendar extends JFrame {
 	
 	String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+	private EventAdder ea;
 	
 	private JPanel contentPane;
 	private JLabel monthLabel;
@@ -84,9 +85,13 @@ public class VisualCallendar extends JFrame {
 		}
 		
 		GregorianCalendar g = new GregorianCalendar();
-		//updateCalendar(g.get(Calendar.MONTH), Calendar.YEAR);
-		updateCalendar(4,2015);
+		updateCalendar(g.get(Calendar.MONTH), g.get(Calendar.YEAR));
 		
+	}
+	
+	public VisualCallendar(EventAdder eve){
+		this();
+		ea = eve;
 	}
 	
 	private void updateCalendar(int month, int year) { //0 is January
@@ -120,6 +125,11 @@ public class VisualCallendar extends JFrame {
 				days.get(i).get(k).clear();
 			}
 		}
+	}
+	
+	private void chooseDay(int day){
+		ea.setEventDate(day, currentMonth+1, currentYear);
+		dispose();
 	}
 
 	private class GridButton extends JButton{
@@ -162,7 +172,7 @@ public class VisualCallendar extends JFrame {
 			}
 			
 			public void actionPerformed(ActionEvent e) {
-				if(dayNumber >0 ) System.out.println(dayNumber);
+				if(dayNumber >0 ) chooseDay(dayNumber);
 			}
 		}
 	}

@@ -111,8 +111,6 @@ public class Window extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 			Code();
-			VisualCallendar vc = new VisualCallendar();
-			vc.setVisible(true);
 		}
 	}
 	private class SwingAction_1 extends AbstractAction {
