@@ -31,6 +31,10 @@ public class Window extends JFrame {
 	private JPanel contentPane;
 	private JList eventList;
 	private final Action action = new SwingAction();
+	private JButton deleteEventButton;
+	private final Action action_1 = new SwingAction_2();
+	
+	private int selectedItemIndex = -1;
 
 	/**
 	 * Launch the application.
@@ -63,20 +67,28 @@ public class Window extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton addEventButton = new JButton("New button");
-		addEventButton.setBounds(295, 11, 193, 98);
+		addEventButton.setBounds(295, 11, 193, 53);
 		addEventButton.setAction(action);
 		contentPane.add(addEventButton);
 		
 		eventList = new JList();
 		eventList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				if(e.getValueIsAdjusting())
+				if(e.getValueIsAdjusting()){
 					System.out.println(eventList.getSelectedIndex());
+					selectedItemIndex = eventList.getSelectedIndex();
+				}
 			}
 		});
+		
+		deleteEventButton = new JButton("Usu\u0144 zdarzenie");
+		deleteEventButton.setAction(action_1);
+		deleteEventButton.setBounds(295, 75, 193, 53);
+		contentPane.add(deleteEventButton);
 		eventList.setBounds(10, 11, 275, 239);
 		contentPane.add(eventList);
 		
+		events.sort();
 		updateEventList();
 	}
 	
@@ -97,9 +109,6 @@ public class Window extends JFrame {
 		events.loadObjects();
 		events.print();
 		
-		//SecondaryWindow w = new SecondaryWindow();
-		//w.open();
-		
 		EventAdder a = new EventAdder(events);
 		a.setVisible(true);
 	}
@@ -113,16 +122,19 @@ public class Window extends JFrame {
 			Code();
 		}
 	}
-	private class SwingAction_1 extends AbstractAction {
-		public SwingAction_1() {
-			putValue(NAME, "SwingAction_1");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-		public void actionPerformed(ActionEvent e) {
-		}
-	}
+
 	
 	public void updateEventList(){
 		if (eventList != null) eventList.setListData(events.ToStringArray());
+	}
+	private class SwingAction_2 extends AbstractAction {
+		public SwingAction_2() {
+			putValue(NAME, "Usuñ zdarzenie");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			events.removeAt(selectedItemIndex);
+			updateEventList();
+		}
 	}
 }

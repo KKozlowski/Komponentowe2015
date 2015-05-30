@@ -191,7 +191,13 @@ public class EventContainer implements ObjectContainer {
 	@Override
 	public void add(Object added) {
 		eventy.add((Event) added);
+		sort();
 		if (window!=null) window.updateEventList();
+	}
+	
+	public void removeAt(int i){
+		if(i>=0) eventy.remove(i);
+		
 	}
 	
 	public String[] ToStringArray(){

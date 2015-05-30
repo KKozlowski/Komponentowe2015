@@ -26,6 +26,11 @@ import java.util.GregorianCalendar;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.SwingConstants;
+import javax.swing.JTextArea;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JEditorPane;
+import java.awt.Dimension;
 
 
 public class EventAdder extends JFrame {
@@ -37,6 +42,8 @@ public class EventAdder extends JFrame {
 	private EventContainer events;
 	private final SwingAction action = new SwingAction();
 	private JTextField hourField;
+	private JTextField placeField;
+	private JTextField descriptionField;
 
 	/**
 	 * Create the frame.
@@ -47,7 +54,7 @@ public class EventAdder extends JFrame {
 		events = ev;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
-		setBounds(100, 100, 300, 306);
+		setBounds(100, 100, 300, 360);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -64,6 +71,10 @@ public class EventAdder extends JFrame {
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 		
+		JLabel lblMiejsceZdarzenia = new JLabel("Miejsce zdarzenia");
+		lblMiejsceZdarzenia.setBounds(10, 157, 264, 14);
+		contentPane.add(lblMiejsceZdarzenia);
+		
 
 		
 		JButton addButton = new JButton("Dodaj");
@@ -79,11 +90,25 @@ public class EventAdder extends JFrame {
 					events.print();
 					dispose();
 				} catch (DateFormatException d) {
-
+					hourField.setBackground(Color.RED);
 				}
 			}
 		});
-		addButton.setBounds(10, 213, 264, 23);
+		
+		placeField = new JTextField();
+		placeField.setColumns(10);
+		placeField.setBounds(10, 179, 264, 20);
+		contentPane.add(placeField);
+		
+		JLabel lblOpisZdarzenia = new JLabel("Opis zdarzenia");
+		lblOpisZdarzenia.setBounds(10, 210, 264, 14);
+		contentPane.add(lblOpisZdarzenia);
+		
+		descriptionField = new JTextField();
+		descriptionField.setColumns(10);
+		descriptionField.setBounds(10, 235, 264, 20);
+		contentPane.add(descriptionField);
+		addButton.setBounds(10, 266, 264, 23);
 		contentPane.add(addButton);
 		
 		JButton cancelButton = new JButton("Anuluj");
@@ -92,7 +117,7 @@ public class EventAdder extends JFrame {
 				dispose();
 			}
 		});
-		cancelButton.setBounds(10, 240, 264, 23);
+		cancelButton.setBounds(10, 293, 264, 23);
 		contentPane.add(cancelButton);
 		
 		JButton calendarOpener = new JButton("New button");

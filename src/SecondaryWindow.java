@@ -16,18 +16,10 @@ public class SecondaryWindow extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public void open() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SecondaryWindow frame = new SecondaryWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	/*public void open() {
+		setVisible(true);
+	}*/
+	
 	public SecondaryWindow() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
