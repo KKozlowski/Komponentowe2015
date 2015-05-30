@@ -42,18 +42,6 @@ public class EventAdder extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public void open() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					EventAdder frame = new EventAdder(events);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	public EventAdder(EventContainer ev) {
 		
 		events = ev;
@@ -85,6 +73,7 @@ public class EventAdder extends JFrame {
 				try {
 					toAdd.setDate(action.getLabel());
 					toAdd.setName(nameField.getText());
+					toAdd.setDateHour(action.getLabel() + " " + hourField.getText());
 					events.add(toAdd);
 					events.sort();
 					events.print();
@@ -115,12 +104,12 @@ public class EventAdder extends JFrame {
 		
 		calendarOpener.setBounds(10, 11, 264, 52);
 		contentPane.add(calendarOpener);
-		DateFormat hourFormat = new SimpleDateFormat("hh:mm");
+		DateFormat hourFormat = new SimpleDateFormat("HH:mm");
 		hourField = new JTextField();
 		hourField.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		hourField.setText(hourFormat.format(cal.getTime()));
-		hourField.setBounds(115, 75, 60, 20);
+		hourField.setBounds(10, 75, 264, 20);
 		contentPane.add(hourField);
 		hourField.setColumns(10);
 	}

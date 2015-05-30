@@ -4,7 +4,7 @@
   <void method="add">
    <object class="Event">
     <void property="date">
-     <string>05/02/2014</string>
+     <string>05/02/2014 00:00</string>
     </void>
     <void property="name">
      <string>Spotkanie3</string>
@@ -14,7 +14,7 @@
   <void method="add">
    <object class="Event">
     <void property="date">
-     <string>02/03/2014</string>
+     <string>02/03/2014 00:00</string>
     </void>
     <void property="name">
      <string>Spotkanie</string>
@@ -24,7 +24,7 @@
   <void method="add">
    <object class="Event">
     <void property="date">
-     <string>05/03/2014</string>
+     <string>05/03/2014 00:00</string>
     </void>
     <void property="name">
      <string>Spotkanie2</string>

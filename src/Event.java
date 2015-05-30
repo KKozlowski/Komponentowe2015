@@ -13,6 +13,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	private String description;
 	private Comparator<Event> comparator;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	private static SimpleDateFormat sdfHour = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	//private GregorianCalendar date = new GregorianCalendar();
 	
 
@@ -34,10 +35,12 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	}
 	
 	public Event (String name, String dataa, String description) throws DateFormatException{
-		this(name, dataa);
+		this();
+		setName(name);
+		setDateHour(dataa);
 		setDescription(description);
 	}
-	
+
 	 private void writeObject(ObjectOutputStream o)
 	   throws IOException {  
 		 o.writeObject(name);
@@ -72,17 +75,16 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	    Date d; 
 	    try {
 	    	data = sdf.parse(dat);
-	    	/*date.setTime(d);
-		    System.out.println("Input Date = " + sdf.format(d));
-		    int dayBefore = date.get(Calendar.DAY_OF_YEAR);
-		    date.roll(Calendar.DAY_OF_YEAR, -1);
-		    int dayAfter = date.get(Calendar.DAY_OF_YEAR);
-		    if(dayAfter > dayBefore) {
-		        date.roll(Calendar.YEAR, -1);
-		    }
-		    date.get(Calendar.DATE);
-		    java.util.Date yesterday = date.getTime();
-		    System.out.println("Yesterdays Date = " + sdf.format(yesterday));*/
+	    } catch ( ParseException pe){
+	    	throw new DateFormatException();
+	    }
+	    
+	}
+	
+	public void setDateHour(String dat) throws DateFormatException{
+	    Date d; 
+	    try {
+	    	data = sdfHour.parse(dat);
 	    } catch ( ParseException pe){
 	    	throw new DateFormatException();
 	    }
@@ -94,7 +96,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	}
 	
 	public String getDate(){
-		return sdf.format(data);
+		return sdfHour.format(data);
 	}
 	
 	public long getMiliseconds(){
