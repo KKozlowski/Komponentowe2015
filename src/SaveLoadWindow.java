@@ -63,6 +63,7 @@ public class SaveLoadWindow extends JFrame {
 				putValue(NAME, "Load");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
+		
 		public void actionPerformed(ActionEvent e) {
 			if(isToSave)
 				switch (comboBox.getSelectedIndex()){
@@ -78,6 +79,20 @@ public class SaveLoadWindow extends JFrame {
 				case 3:
 					events.SerializeSqlite();
 					break;
+				}
+			else
+				switch (comboBox.getSelectedIndex()){
+				case 0:
+					events.DeserializeXmlJava();
+					break;
+				case 1:
+					events.DeserializeXstream();
+					break;
+				case 2:
+					events.DeserializeSqlServer();
+					break;
+				case 3:
+					events.DeserializeSqlite();
 				}
 			System.out.println(comboBox.getSelectedIndex());
 			dispose();

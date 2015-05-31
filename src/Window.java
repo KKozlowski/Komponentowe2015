@@ -24,12 +24,15 @@ import com.thoughtworks.xstream.XStream;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JMenuBar;
 
 
-public class Window extends JFrame {
+public class Window extends JFrame  {
 	private EventContainer events;
 	private JPanel contentPane;
 	private JList eventList;
@@ -43,12 +46,14 @@ public class Window extends JFrame {
 	private JMenuItem saveButton;
 	private JMenuItem loadButton;
 	private final Action saveAction = new SaveAction();
+	private final Action loadAction = new LoadAction();
 
 	/**
 	 * Create the frame.
 	 */
 	public Window() {
 		setTitle("Organizer");
+		
 		//Code();
 		XStream xst = new XStream();
 		events = new EventContainer(this);
@@ -66,6 +71,7 @@ public class Window extends JFrame {
 		mnFileMenu.add(saveButton);
 		
 		loadButton = new JMenuItem("Load");
+		loadButton.setAction(loadAction);
 		mnFileMenu.add(loadButton);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -76,6 +82,7 @@ public class Window extends JFrame {
 		addEventButton.setBounds(295, 11, 193, 53);
 		addEventButton.setAction(action);
 		contentPane.add(addEventButton);
+		
 		
 		eventList = new JList();
 		eventList.addListSelectionListener(new ListSelectionListener() {
@@ -150,6 +157,16 @@ public class Window extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 			SaveLoadWindow slw = new SaveLoadWindow(events, true);
+			slw.setVisible(true);
+		}
+	}
+	private class LoadAction extends AbstractAction {
+		public LoadAction() {
+			putValue(NAME, "Load");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			SaveLoadWindow slw = new SaveLoadWindow(events, false);
 			slw.setVisible(true);
 		}
 	}

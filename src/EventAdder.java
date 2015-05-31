@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputMethodListener;
 import java.awt.event.InputMethodEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.Color;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -55,6 +57,13 @@ public class EventAdder extends JFrame {
 	
 	public EventAdder(EventContainer ev) {
 		
+		
+		
+		
+		
+		
+		
+		
 		events = ev;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
@@ -72,6 +81,20 @@ public class EventAdder extends JFrame {
 		
 		
 		nameField.setBounds(10, 126, 264, 20);
+		nameField.addKeyListener(new KeyListener() {//example KeyListener
+		      public void keyTyped(KeyEvent e) {
+		        System.out.print(e.getKeyChar());
+		      }
+
+		      public void keyPressed(KeyEvent e) {
+
+		      }
+
+		      public void keyReleased(KeyEvent e) {
+
+		      }
+		});
+		
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 		

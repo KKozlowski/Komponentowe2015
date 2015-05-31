@@ -52,6 +52,7 @@ public class EventContainer implements ObjectContainer {
 		SerializeSqlServer();
 		DeserializeSqlServer();
 		SerializeSqlite();
+		DeserializeSqlite();
 		window.updateEventList();
 	}
 	
@@ -250,7 +251,7 @@ public class EventContainer implements ObjectContainer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		window.updateEventList();
 	}
 	
 	public void SerializeXmlJava(){
@@ -283,7 +284,7 @@ public class EventContainer implements ObjectContainer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+        window.updateEventList();
 	}
 	
 	public void SerializeSqlServer(){
@@ -292,10 +293,11 @@ public class EventContainer implements ObjectContainer {
         //db.executeWithResult("use HR; select last_name from employees; drop database huhue;");
         db.execute("USE [master]");
         db.execute("IF OBJECT_ID('componentProject') = NULL create database componentProject; ");
-        db.execute("use componentProject; IF OBJECT_ID('dbo.events', 'U') IS NOT NULL drop table events; create table events (id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), primary key (id));");
+        db.execute("use componentProject; IF OBJECT_ID('dbo.events', 'U') IS NOT NULL drop table events; create table events (id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), description VARCHAR(300), place VARCHAR(100), reminder INTEGER, primary key (id));");
         StringBuilder finalUpdate = new StringBuilder();
         for(Event e : eventy){
-        	finalUpdate.append("insert into events(nazwa,data) values ('"+e.getName()+"', '"+ e.getDateHour() +"'); ");
+        	finalUpdate.append("insert into events(nazwa,data, description, place, reminder) values ('"+e.getName()+"', '"
+        			+ e.getDateHour() +"', '"+ e.getDescription() +"', '"+ e.getPlace() +"', '"+ e.getReminder() + "'); ");
         }
         
         db.execute(finalUpdate.toString());
@@ -304,22 +306,60 @@ public class EventContainer implements ObjectContainer {
 	public void DeserializeSqlServer(){
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
-        ResultSet rs = db.executeWithResult("use componentProject; select nazwa, data from events");
+        ResultSet rs = db.executeWithResult("use componentProject; select nazwa,data, description, place, reminder from events");
         try{
+        	ArrayList<Event> nowe = new ArrayList<Event>();
         	while (rs.next()) {
-        	  String nazwa = rs.getString("nazwa");
-        	  String data = rs.getString("data");
-        	  System.out.println(nazwa + " " + data);
+        	  Event ev = new Event(rs.getString("nazwa"), rs.getString("data"));
+        	  ev.setDescription(rs.getString("description"));
+        	  ev.setPlace(rs.getString("place"));
+        	  ev.setReminder(rs.getInt("reminder"));
+        	  nowe.add(ev);
+        	  System.out.println(ev);
         	}
+        	eventy = nowe;
         }
         catch(SQLException s){
         	s.printStackTrace();
-        }
+        } catch (DateFormatException e) {
+			e.printStackTrace();
+		}
+        window.updateEventList();
 	}
 	
 	public void SerializeSqlite(){
 		SqliteDatabase db= new SqliteDatabase();
 		db.dbConnect();
-        db.execute("create table if not exists events(id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), primary key (id))");
+        db.execute("drop table if exists events; create table events(id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), description VARCHAR(300), place VARCHAR(100), reminder INTEGER, primary key (id))");
+        StringBuilder finalUpdate = new StringBuilder();
+        for(Event e : eventy){
+        	finalUpdate.append("insert into events(nazwa,data, description, place, reminder) values ('"+e.getName()+"', '"
+        			+ e.getDateHour() +"', '"+ e.getDescription() +"', '"+ e.getPlace() +"', '"+ e.getReminder() + "'); ");
+        }
+        db.execute(finalUpdate.toString());
+	}
+	
+	public void DeserializeSqlite(){
+		SqliteDatabase db= new SqliteDatabase();
+		db.dbConnect();
+		ResultSet rs = db.executeWithResult("select nazwa,data, description, place, reminder from events");
+        try{
+        	ArrayList<Event> nowe = new ArrayList<Event>();
+        	while (rs.next()) {
+        	  Event ev = new Event(rs.getString("nazwa"), rs.getString("data"));
+        	  ev.setDescription(rs.getString("description"));
+        	  ev.setPlace(rs.getString("place"));
+        	  ev.setReminder(rs.getInt("reminder"));
+        	  nowe.add(ev);
+        	  System.out.println(ev);
+        	}
+        	eventy = nowe;
+        }
+        catch(SQLException s){
+        	s.printStackTrace();
+        } catch (DateFormatException e) {
+			e.printStackTrace();
+		}
+        window.updateEventList();
 	}
 }

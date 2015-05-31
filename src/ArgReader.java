@@ -1,4 +1,3 @@
-
 public class ArgReader {
 	int numberOfArgs;
 	String[] args;

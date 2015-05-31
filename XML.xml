@@ -4,16 +4,6 @@
   <void method="add">
    <object class="Event">
     <void property="dateHour">
-     <string>11/11/2011 00:00</string>
-    </void>
-    <void property="name">
-     <string>Hue</string>
-    </void>
-   </object>
-  </void>
-  <void method="add">
-   <object class="Event">
-    <void property="dateHour">
      <string>05/02/2014 00:00</string>
     </void>
     <void property="name">
