@@ -14,7 +14,7 @@ import java.io.*;
 
 import com.thoughtworks.xstream.XStream;
 
-public class EventContainer implements ObjectContainer {
+public class EventContainer implements ObjectContainer, Tickable {
 	ArrayList<Event> eventy = new ArrayList<Event>();
 	Window window;
 	XStream xstream;
@@ -361,5 +361,10 @@ public class EventContainer implements ObjectContainer {
 			e.printStackTrace();
 		}
         window.updateEventList();
+	}
+
+	@Override
+	public void timeTick() {
+		System.out.println("Tick");		
 	}
 }

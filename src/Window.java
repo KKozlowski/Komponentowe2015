@@ -1,35 +1,21 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import javax.swing.AbstractAction;
-
-import java.awt.event.ActionEvent;
-
-import javax.swing.Action;
-import javax.swing.SwingConstants;
-
-import java.awt.CardLayout;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.JList;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.thoughtworks.xstream.XStream;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JMenuBar;
 
 
 public class Window extends JFrame  {
@@ -47,12 +33,15 @@ public class Window extends JFrame  {
 	private JMenuItem loadButton;
 	private final Action saveAction = new SaveAction();
 	private final Action loadAction = new LoadAction();
+	
+	private Timer timer;
 
 	/**
 	 * Create the frame.
 	 */
 	public Window() {
 		setTitle("Organizer");
+		
 		
 		//Code();
 		XStream xst = new XStream();
@@ -103,6 +92,24 @@ public class Window extends JFrame  {
 		
 		events.sort();
 		updateEventList();
+		
+		this.addWindowListener(new WindowAdapter()  {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				timer.setActive(false);
+				while(timer.isAlive())
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			}
+		});
+		
+		timer = new Timer(events, 2000);
+		timer.start();
 	}
 	
 	private void Code(){	
