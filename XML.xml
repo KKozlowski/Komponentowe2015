@@ -31,5 +31,15 @@
     </void>
    </object>
   </void>
+  <void method="add">
+   <object class="Event">
+    <void property="dateHour">
+     <string>05/03/2014 00:00</string>
+    </void>
+    <void property="name">
+     <string>Spotkanie2</string>
+    </void>
+   </object>
+  </void>
  </object>
 </java>

@@ -8,11 +8,11 @@ import java.sql.Statement;
 public class SqliteDatabase {
 	public SqliteDatabase() {}
 	public Connection connection;
-    public void dbConnect(){
+    public void dbConnect(String name){
         try
         {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:testdb.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:"+name);
             System.out.println("connected");
             
         }

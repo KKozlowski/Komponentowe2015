@@ -26,6 +26,12 @@ public class EventContainer implements ObjectContainer, Tickable {
 			Event ev2 = new Event("Spotkanie2", "05/03/2014");
 			add(ev);
 			add(ev2);
+			try {
+				add((Event)(ev2.clone()));
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			add(new Event("Spotkanie3", "05/02/2014"));
 			eventy.sort(ev.new DateComparator());
 		}
@@ -40,19 +46,19 @@ public class EventContainer implements ObjectContainer, Tickable {
 	public EventContainer(Window mainWin){
 		this();
 		window = mainWin;
-		SerializeXstream();
-		SerializeXmlJava();
-		DeserializeXmlJava();
-		DeserializeXstream();
+		SerializeXstream("XXML.xml");
+		SerializeXmlJava("XML.xml");
+		DeserializeXmlJava("XML.xml");
+		DeserializeXstream("XXML.xml");
 		try {
 			add(new Event("Hue", "11/11/2011"));
 		} catch (DateFormatException e) {
 			e.printStackTrace();
 		}
-		SerializeSqlServer();
-		DeserializeSqlServer();
-		SerializeSqlite();
-		DeserializeSqlite();
+		SerializeSqlServer("componentProject");
+		DeserializeSqlServer("componentProject");
+		SerializeSqlite("test.db");
+		DeserializeSqlite("test.db");
 		window.updateEventList();
 	}
 	
@@ -215,11 +221,12 @@ public class EventContainer implements ObjectContainer, Tickable {
 		window = win;
 	}
 	
-	public void SerializeXstream(){
+	
+	public void SerializeXstream(String saveLocation){
 		String serial = xstream.toXML(eventy);
 		FileOutputStream fos = null;
 		try {
-		    fos = new FileOutputStream("XXML.xml");
+		    fos = new FileOutputStream(saveLocation);
 		    fos.write("<?xml version=\"1.0\"?>".getBytes("UTF-8")); 
 		    byte[] bytes = serial.getBytes("UTF-8");
 		    fos.write(bytes);
@@ -237,8 +244,8 @@ public class EventContainer implements ObjectContainer, Tickable {
 		}
 	}
 	
-	public void DeserializeXstream(){
-		File file = new File("XXML.xml");
+	public void DeserializeXstream(String saveLocation){
+		File file = new File(saveLocation);
 		byte[] bytes = new byte[(int) file.length()];
 		try {
 			FileInputStream fis = new FileInputStream(file);
@@ -254,12 +261,12 @@ public class EventContainer implements ObjectContainer, Tickable {
 		window.updateEventList();
 	}
 	
-	public void SerializeXmlJava(){
+	public void SerializeXmlJava(String saveLocation){
 		XMLEncoder encoder;
 		try {
 			encoder = new XMLEncoder(
 			      new BufferedOutputStream(
-			        new FileOutputStream("XML.xml")));
+			        new FileOutputStream(saveLocation)));
 			encoder.writeObject(eventy);
 	        encoder.close();
 	        
@@ -269,12 +276,12 @@ public class EventContainer implements ObjectContainer, Tickable {
 		}
 	}
 	
-	public void DeserializeXmlJava(){
+	public void DeserializeXmlJava(String saveLocation){
 		
 		XMLDecoder decoder;
 		try {
 			decoder = new XMLDecoder(new BufferedInputStream(
-                new FileInputStream("XML.xml")));
+                new FileInputStream(saveLocation)));
 			
 			ArrayList<Event> readObject = (ArrayList<Event>)decoder.readObject();
 			eventy = readObject;
@@ -287,7 +294,7 @@ public class EventContainer implements ObjectContainer, Tickable {
         window.updateEventList();
 	}
 	
-	public void SerializeSqlServer(){
+	public void SerializeSqlServer(String saveLocation){
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
         //db.executeWithResult("use HR; select last_name from employees; drop database huhue;");
@@ -303,7 +310,7 @@ public class EventContainer implements ObjectContainer, Tickable {
         db.execute(finalUpdate.toString());
 	}
 	
-	public void DeserializeSqlServer(){
+	public void DeserializeSqlServer(String saveLocation){
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
         ResultSet rs = db.executeWithResult("use componentProject; select nazwa,data, description, place, reminder from events");
@@ -327,9 +334,9 @@ public class EventContainer implements ObjectContainer, Tickable {
         window.updateEventList();
 	}
 	
-	public void SerializeSqlite(){
+	public void SerializeSqlite(String saveLocation){
 		SqliteDatabase db= new SqliteDatabase();
-		db.dbConnect();
+		db.dbConnect(saveLocation);
         db.execute("drop table if exists events; create table events(id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), description VARCHAR(300), place VARCHAR(100), reminder INTEGER, primary key (id))");
         StringBuilder finalUpdate = new StringBuilder();
         for(Event e : eventy){
@@ -339,9 +346,9 @@ public class EventContainer implements ObjectContainer, Tickable {
         db.execute(finalUpdate.toString());
 	}
 	
-	public void DeserializeSqlite(){
+	public void DeserializeSqlite(String saveLocation){
 		SqliteDatabase db= new SqliteDatabase();
-		db.dbConnect();
+		db.dbConnect(saveLocation);
 		ResultSet rs = db.executeWithResult("select nazwa,data, description, place, reminder from events");
         try{
         	ArrayList<Event> nowe = new ArrayList<Event>();

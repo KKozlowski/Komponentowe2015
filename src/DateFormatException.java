@@ -1,5 +1,5 @@
 
-public class DateFormatException extends Exception {
+class DateFormatException extends Exception {
 	/**
 	 * 
 	 */

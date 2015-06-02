@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
-public class Event implements Comparable<Event>, Comparator<Event>, Serializable, Individual, Chronologic{
+public class Event implements Comparable<Event>, Comparator<Event>, Serializable, Individual, Chronologic, Cloneable{
 	private String name;
 	private Date data = new Date();
 	private String description;
@@ -180,4 +180,9 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 			return "DateComparator";
 		}
 	}
+	
+	@Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

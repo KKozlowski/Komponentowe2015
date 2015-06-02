@@ -16,7 +16,7 @@ import javax.swing.Action;
 public class SaveLoadWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField fileName;
 	private JComboBox comboBox;
 
 	private boolean isToSave;
@@ -35,10 +35,11 @@ public class SaveLoadWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setBounds(10, 11, 205, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		fileName = new JTextField();
+		fileName.setText("Test.serial");
+		fileName.setBounds(10, 11, 205, 20);
+		contentPane.add(fileName);
+		fileName.setColumns(10);
 		
 		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"XML (Java)", "XML (Xstream)", "SQL Server", "Sqlite"}));
@@ -65,34 +66,35 @@ public class SaveLoadWindow extends JFrame {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
+			String name = fileName.getText();
 			if(isToSave)
 				switch (comboBox.getSelectedIndex()){
 				case 0:
-					events.SerializeXmlJava();
+					events.SerializeXmlJava(name);
 					break;
 				case 1:
-					events.SerializeXstream();
+					events.SerializeXstream(name);
 					break;
 				case 2:
-					events.SerializeSqlServer();
+					events.SerializeSqlServer(name);
 					break;
 				case 3:
-					events.SerializeSqlite();
+					events.SerializeSqlite(name);
 					break;
 				}
 			else
 				switch (comboBox.getSelectedIndex()){
 				case 0:
-					events.DeserializeXmlJava();
+					events.DeserializeXmlJava(name);
 					break;
 				case 1:
-					events.DeserializeXstream();
+					events.DeserializeXstream(name);
 					break;
 				case 2:
-					events.DeserializeSqlServer();
+					events.DeserializeSqlServer(name);
 					break;
 				case 3:
-					events.DeserializeSqlite();
+					events.DeserializeSqlite(name);
 				}
 			System.out.println(comboBox.getSelectedIndex());
 			dispose();
