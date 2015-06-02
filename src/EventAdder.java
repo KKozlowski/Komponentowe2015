@@ -42,7 +42,6 @@ public class EventAdder extends JFrame {
 	private Event toAdd = new Event();
 	private JPanel contentPane;
 	private JTextField nameField;
-	private JTextField dateField;
 	
 	private EventContainer events;
 	private final SwingAction action = new SwingAction();
@@ -50,20 +49,14 @@ public class EventAdder extends JFrame {
 	private JTextField placeField;
 	private JTextField descriptionField;
 	private JTextField reminderField;
+	
+	JButton addButton;
 
 	/**
 	 * Create the frame.
 	 */
-	
-	public EventAdder(EventContainer ev) {
-		
-		
-		
-		
-		
-		
-		
-		
+
+	public EventAdder(EventContainer ev, boolean addingOnly) {
 		events = ev;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
@@ -104,38 +97,42 @@ public class EventAdder extends JFrame {
 		
 
 		
-		JButton addButton = new JButton("Dodaj");
-		addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("BUMP");
-				boolean noProblems = true;
-				toAdd.setName(nameField.getText());
-				toAdd.setDescription(descriptionField.getText());
-				try {
-					toAdd.setDate(action.getLabel());
-					toAdd.setDateHour(action.getLabel() + " " + hourField.getText());
-					hourField.setBackground(Color.WHITE);
-				} catch (DateFormatException d) {
-					hourField.setBackground(Color.RED);
-					noProblems = false;
-				}
-				try {
-					toAdd.setReminder(reminderField.getText());
-					reminderField.setBackground(Color.WHITE);
-				} catch (NumberFormatException n){
-					reminderField.setBackground(Color.RED);
-					noProblems = false;
-				}
-				if(noProblems){
+		
+		if(addingOnly){
+			addButton = new JButton("Dodaj");
+			addButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					System.out.println("BUMP");
+					boolean noProblems = true;
+					toAdd.setName(nameField.getText());
+					toAdd.setDescription(descriptionField.getText());
+					try {
+						toAdd.setDate(action.getLabel());
+						toAdd.setDateHour(action.getLabel() + " " + hourField.getText());
+						hourField.setBackground(Color.WHITE);
+					} catch (DateFormatException d) {
+						hourField.setBackground(Color.RED);
+						noProblems = false;
+					}
+					try {
+						toAdd.setReminder(reminderField.getText());
+						reminderField.setBackground(Color.WHITE);
+					} catch (NumberFormatException n){
+						reminderField.setBackground(Color.RED);
+						noProblems = false;
+					}
+					if(noProblems){
+						
+						events.add(toAdd);
+						events.sort();
+						events.print();
+						dispose();
+					}
 					
-					events.add(toAdd);
-					events.sort();
-					events.print();
-					dispose();
 				}
-				
-			}
-		});
+			});
+		} else
+			addButton = new JButton("Zmieñ");
 		
 		placeField = new JTextField();
 		placeField.setColumns(10);
@@ -189,6 +186,48 @@ public class EventAdder extends JFrame {
 		reminderField.setBounds(10, 292, 264, 20);
 		contentPane.add(reminderField);
 		reminderField.setColumns(10);
+	}
+	
+	public void setEvent(int targetIndex){
+		final EventContainer events = this.events;
+		final Event target = events.get(targetIndex);
+		nameField.setText(target.getName());
+		action.setLabel(target.getDay());
+		placeField.setText(target.getPlace());
+		descriptionField.setText(target.getDescription());
+		reminderField.setText(Integer.toString(target.getReminder()));
+		hourField.setText(target.getHour());
+		
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				System.out.println("BUMP");
+				boolean noProblems = true;
+				target.setName(nameField.getText());
+				target.setDescription(descriptionField.getText());
+				try {
+					target.setDate(action.getLabel());
+					target.setDateHour(action.getLabel() + " " + hourField.getText());
+					hourField.setBackground(Color.WHITE);
+				} catch (DateFormatException d) {
+					hourField.setBackground(Color.RED);
+					noProblems = false;
+				}
+				try {
+					target.setReminder(reminderField.getText());
+					reminderField.setBackground(Color.WHITE);
+				} catch (NumberFormatException n){
+					reminderField.setBackground(Color.RED);
+					noProblems = false;
+				}
+				if(noProblems){
+					events.sort();
+					events.print();
+					dispose();
+				}
+				
+			}
+		});
 	}
 	
 	void openCalendar(){

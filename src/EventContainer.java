@@ -74,6 +74,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 	
 	public void sort(){
 		eventy.sort(new Event().new DateComparator());
+		if (window!= null) window.updateEventList();
 	}
 	
 	public void getEvents(){
@@ -205,6 +206,10 @@ public class EventContainer implements ObjectContainer, Tickable {
 	public void removeAt(int i){
 		if(i>=0) eventy.remove(i);
 		
+	}
+	
+	public Event get(int i){
+		return eventy.get(i);
 	}
 	
 	public String[] ToStringArray(){

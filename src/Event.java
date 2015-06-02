@@ -22,6 +22,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	public Event(){
 		comparator = new DateComparator();
 		description = "";
+		place = "";
 	}
 	
 	public Event(String name, String dataa) throws DateFormatException {
@@ -132,6 +133,10 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	public String getHour(){
 		SimpleDateFormat hour = new SimpleDateFormat("HH:mm");
 		return hour.format(data);
+	}
+	
+	public String getDay(){
+		return sdf.format(data);
 	}
 	
 	public long getMiliseconds(){

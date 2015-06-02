@@ -35,6 +35,8 @@ public class Window extends JFrame  {
 	private final Action loadAction = new LoadAction();
 	
 	private Timer timer;
+	private JButton modifyEventButton;
+	private final EditAction editAction = new EditAction();
 
 	/**
 	 * Create the frame.
@@ -87,6 +89,11 @@ public class Window extends JFrame  {
 		deleteEventButton.setAction(action_1);
 		deleteEventButton.setBounds(295, 75, 193, 53);
 		contentPane.add(deleteEventButton);
+		
+		modifyEventButton = new JButton("Edytuj zdarzenie");
+		modifyEventButton.setAction( editAction);
+		modifyEventButton.setBounds(295, 139, 193, 53);
+		contentPane.add(modifyEventButton);
 		eventList.setBounds(10, 11, 275, 271);
 		contentPane.add(eventList);
 		
@@ -129,7 +136,7 @@ public class Window extends JFrame  {
 		events.loadObjects();
 		events.print();
 		
-		EventAdder a = new EventAdder(events);
+		EventAdder a = new EventAdder(events, true);
 		a.setVisible(true);
 	}
 
@@ -175,6 +182,17 @@ public class Window extends JFrame  {
 		public void actionPerformed(ActionEvent e) {
 			SaveLoadWindow slw = new SaveLoadWindow(events, false);
 			slw.setVisible(true);
+		}
+	}
+	private class EditAction extends AbstractAction {
+		public EditAction() {
+			putValue(NAME, "Edytuj zdarzenie");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			EventAdder ea = new EventAdder(events, false);
+			ea.setEvent(selectedItemIndex);
+			ea.setVisible(true);
 		}
 	}
 }
