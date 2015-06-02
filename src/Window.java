@@ -17,6 +17,9 @@ import javax.swing.event.ListSelectionListener;
 
 import com.thoughtworks.xstream.XStream;
 
+import java.awt.event.ActionListener;
+import java.util.Date;
+
 
 public class Window extends JFrame  {
 	private EventContainer events;
@@ -37,6 +40,12 @@ public class Window extends JFrame  {
 	private Timer timer;
 	private JButton modifyEventButton;
 	private final EditAction editAction = new EditAction();
+	private JButton filterButton;
+	private final Action action_2 = new FilterAction();
+	
+	JButton addEventButton;
+	private JButton deletePastButton;
+	private final Action action_3 = new DeletePastAction();
 
 	/**
 	 * Create the frame.
@@ -49,7 +58,7 @@ public class Window extends JFrame  {
 		XStream xst = new XStream();
 		events = new EventContainer(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 514, 353);
+		setBounds(100, 100, 514, 440);
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -69,10 +78,11 @@ public class Window extends JFrame  {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton addEventButton = new JButton("New button");
+		addEventButton = new JButton("New button");
 		addEventButton.setBounds(295, 11, 193, 53);
 		addEventButton.setAction(action);
 		contentPane.add(addEventButton);
+		
 		
 		
 		eventList = new JList();
@@ -94,7 +104,21 @@ public class Window extends JFrame  {
 		modifyEventButton.setAction( editAction);
 		modifyEventButton.setBounds(295, 139, 193, 53);
 		contentPane.add(modifyEventButton);
-		eventList.setBounds(10, 11, 275, 271);
+		
+		filterButton = new JButton("");
+		filterButton.setAction(action_2);
+		filterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		filterButton.setBounds(295, 199, 193, 53);
+		contentPane.add(filterButton);
+		
+		deletePastButton = new JButton("");
+		deletePastButton.setAction(action_3);
+		deletePastButton.setBounds(295, 263, 193, 53);
+		contentPane.add(deletePastButton);
+		eventList.setBounds(10, 11, 275, 358);
 		contentPane.add(eventList);
 		
 		events.sort();
@@ -193,6 +217,42 @@ public class Window extends JFrame  {
 			EventAdder ea = new EventAdder(events, false);
 			ea.setEvent(selectedItemIndex);
 			ea.setVisible(true);
+		}
+	}
+	private class FilterAction extends AbstractAction {
+		public FilterAction() {
+			putValue(NAME, "Filtruj wed³ug daty");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			if (!events.getFiltered()){
+				Event ev = new Event();
+				try {
+					ev.setDate("03/03/2014");
+				} catch (DateFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				events.dateFilter(ev.getDate(), true);
+				updateEventList();
+				addEventButton.setEnabled(false);
+				putValue(NAME, "Cofnij filtrowanie");
+				
+			} else {
+				events.defilter();
+				updateEventList();
+				putValue(NAME, "Filtruj wed³ug daty");
+				addEventButton.setEnabled(true);
+			}
+		}
+	}
+	private class DeletePastAction extends AbstractAction {
+		public DeletePastAction() {
+			putValue(NAME, "Usuñ minione zdarzenia");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			events.deleteBefore(new Date());
 		}
 	}
 }

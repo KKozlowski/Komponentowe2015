@@ -18,6 +18,8 @@ public class EventContainer implements ObjectContainer, Tickable {
 	ArrayList<Event> eventy = new ArrayList<Event>();
 	Window window;
 	XStream xstream;
+	private boolean isFiltered;
+	ArrayList<Event> kopiaEventow;
 	
 	public EventContainer(){
 		xstream = new XStream();
@@ -204,7 +206,13 @@ public class EventContainer implements ObjectContainer, Tickable {
 	}
 	
 	public void removeAt(int i){
-		if(i>=0) eventy.remove(i);
+		if(i>=0 && i< eventy.size()) {
+			Event usuwany = eventy.get(i);
+			eventy.remove(usuwany);
+			if(isFiltered){
+				kopiaEventow.remove(usuwany);
+			}
+		}
 		
 	}
 	
@@ -220,6 +228,39 @@ public class EventContainer implements ObjectContainer, Tickable {
 		String[] result = new String[strings.size()];
 		result = strings.toArray(result);
 		return result;
+	}
+	
+	public void dateFilter(java.util.Date date, boolean greater){
+		isFiltered = true;
+		
+		kopiaEventow = eventy;
+		eventy = new ArrayList<Event>();
+		for(Event e : kopiaEventow){
+			if ((greater && e.getDate().compareTo(date) == 1)
+					|| (!greater&& e.getDate().compareTo(date) == -1))
+			eventy.add(e);
+		}
+	}
+	
+	public void defilter(){
+		eventy = kopiaEventow;
+		isFiltered = false;
+	}
+	
+	public boolean getFiltered(){
+		return isFiltered;
+	}
+	
+	public void deleteBefore(java.util.Date date){
+		ArrayList<Event> toDelete = new ArrayList<Event>();
+		for (Event e : eventy){
+			if (e.getDate().compareTo(date) == -1) toDelete.add(e);
+		}
+		
+		for(Event e: toDelete){
+			eventy.remove(e);
+		}
+		window.updateEventList();
 	}
 	
 	public void SetWindow(Window win){

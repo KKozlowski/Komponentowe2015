@@ -23,3 +23,5 @@
 /Tickable.class
 /Window$SwingAction_1.class
 /Window$EditAction.class
+/Window$FilterAction.class
+/Window$DeletePastAction.class
