@@ -25,7 +25,7 @@ import java.awt.Font;
 public class VisualCallendar extends JFrame {
 	
 	String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-	private EventAdder ea;
+	private DateReceiver ea;
 	
 	private JPanel contentPane;
 	private JLabel monthLabel;
@@ -89,7 +89,7 @@ public class VisualCallendar extends JFrame {
 		
 	}
 	
-	public VisualCallendar(EventAdder eve){
+	public VisualCallendar(DateReceiver eve){
 		this();
 		ea = eve;
 	}
@@ -128,7 +128,7 @@ public class VisualCallendar extends JFrame {
 	}
 	
 	private void chooseDay(int day){
-		ea.setEventDate(day, currentMonth+1, currentYear);
+		ea.sendDate(day, currentMonth+1, currentYear);
 		dispose();
 	}
 

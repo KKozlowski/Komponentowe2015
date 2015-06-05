@@ -21,6 +21,9 @@ public class EventContainer implements ObjectContainer, Tickable {
 	private boolean isFiltered;
 	ArrayList<Event> kopiaEventow;
 	
+	/**
+	 * Postawowy konstruktor
+	 */
 	public EventContainer(){
 		xstream = new XStream();
 		try{
@@ -45,6 +48,10 @@ public class EventContainer implements ObjectContainer, Tickable {
 		printList(eventy);
 	}
 	
+	/**
+	 * Konstruktor ustawiaj¹cy pole Window klasy. Pozwala na kontakt warstwy logiki z warstw¹ interfejsu.
+	 * @param mainWin Obiekt g³ównego okna
+	 */
 	public EventContainer(Window mainWin){
 		this();
 		window = mainWin;
@@ -197,14 +204,23 @@ public class EventContainer implements ObjectContainer, Tickable {
 			System.out.println("Wystapil blad podczas wczytywania danych");
 		}
 	}
-
+	
+	/**
+	 * Dodaje nowy obiekt typu Event do listy.
+	 */
 	@Override
 	public void add(Object added) {
-		eventy.add((Event) added);
-		sort();
-		if (window!=null) window.updateEventList();
+		if((Event)added != null){
+			eventy.add((Event) added);
+			sort();
+			if (window!=null) window.updateEventList();
+		}
 	}
 	
+	/**
+	 * Usuwa obiekt o podanym indeksie na liœcie.
+	 * @param i
+	 */
 	public void removeAt(int i){
 		if(i>=0 && i< eventy.size()) {
 			Event usuwany = eventy.get(i);
@@ -216,10 +232,18 @@ public class EventContainer implements ObjectContainer, Tickable {
 		
 	}
 	
+	/**
+	 * @param i numer indeksu na liœcie
+	 * @return Event o indeksie i
+	 */
 	public Event get(int i){
 		return eventy.get(i);
 	}
 	
+	/**
+	 * 
+	 * @return Tablica stringów u¿ywana do ustawiania zawartoœci JList.
+	 */
 	public String[] ToStringArray(){
 		ArrayList<String> strings = new ArrayList<String>();
 		for(Event e : eventy)
@@ -230,27 +254,45 @@ public class EventContainer implements ObjectContainer, Tickable {
 		return result;
 	}
 	
-	public void dateFilter(java.util.Date date, boolean greater){
-		isFiltered = true;
-		
-		kopiaEventow = eventy;
-		eventy = new ArrayList<Event>();
-		for(Event e : kopiaEventow){
-			if ((greater && e.getDate().compareTo(date) == 1)
-					|| (!greater&& e.getDate().compareTo(date) == -1))
-			eventy.add(e);
+	/**
+	 * 
+	 * @param date Data, wed³ug której jest s¹ filtrowane obiekty
+	 * @param greater Czy filtrowane obiekty maj¹ mieæ daty wiêksze, czy mniejsze od podanej daty.
+	 */
+	public void dateFilter(java.util.Date date1, java.util.Date date2){
+		if(!isFiltered){
+			isFiltered = true;
+			
+			kopiaEventow = eventy;
+			eventy = new ArrayList<Event>();
+			for(Event e : kopiaEventow){
+				if (e.getDate().compareTo(date1) == 1
+						&& e.getDate().compareTo(date2) == -1)
+				eventy.add(e);
+			}
 		}
 	}
 	
+	/**
+	 * Cofa filtrowanie
+	 */
 	public void defilter(){
 		eventy = kopiaEventow;
 		isFiltered = false;
 	}
 	
+	/**
+	 * sprawdza, czy kontener jest po filtrowaniu.
+	 * @return
+	 */
 	public boolean getFiltered(){
 		return isFiltered;
 	}
 	
+	/**
+	 * Usuwa wszystkie obiekty przed podan¹ dat¹.
+	 * @param date
+	 */
 	public void deleteBefore(java.util.Date date){
 		ArrayList<Event> toDelete = new ArrayList<Event>();
 		for (Event e : eventy){
@@ -267,7 +309,10 @@ public class EventContainer implements ObjectContainer, Tickable {
 		window = win;
 	}
 	
-	
+	/**
+	 * Serializuje wszystkie obiekty do pliku XML za pomoc¹ biblioteki Xstream
+	 * @param saveLocation nazwa pliku zapisu.
+	 */
 	public void SerializeXstream(String saveLocation){
 		String serial = xstream.toXML(eventy);
 		FileOutputStream fos = null;
@@ -290,8 +335,12 @@ public class EventContainer implements ObjectContainer, Tickable {
 		}
 	}
 	
-	public void DeserializeXstream(String saveLocation){
-		File file = new File(saveLocation);
+	/**
+	 * Deserializuje wszystkie obiekty z pliku XML za pomoc¹ biblioteki Xstream
+	 * @param loadLocation nazwa pliku odczytu.
+	 */
+	public void DeserializeXstream(String loadLocation){
+		File file = new File(loadLocation);
 		byte[] bytes = new byte[(int) file.length()];
 		try {
 			FileInputStream fis = new FileInputStream(file);
@@ -307,6 +356,10 @@ public class EventContainer implements ObjectContainer, Tickable {
 		window.updateEventList();
 	}
 	
+	/**
+	 * Serializuje wszystkie obiekty do pliku XML za pomoc¹ standardowej biblioteki Javy
+	 * @param saveLocation nazwa pliku zapisu.
+	 */
 	public void SerializeXmlJava(String saveLocation){
 		XMLEncoder encoder;
 		try {
@@ -322,12 +375,16 @@ public class EventContainer implements ObjectContainer, Tickable {
 		}
 	}
 	
-	public void DeserializeXmlJava(String saveLocation){
+	/**
+	 * Deserializuje wszystkie obiekty z pliku XML za pomoc¹ standardowej biblioteki Javy
+	 * @param loadLocation nazwa pliku odczytu.
+	 */
+	public void DeserializeXmlJava(String loadLocation){
 		
 		XMLDecoder decoder;
 		try {
 			decoder = new XMLDecoder(new BufferedInputStream(
-                new FileInputStream(saveLocation)));
+                new FileInputStream(loadLocation)));
 			
 			ArrayList<Event> readObject = (ArrayList<Event>)decoder.readObject();
 			eventy = readObject;
@@ -340,6 +397,10 @@ public class EventContainer implements ObjectContainer, Tickable {
         window.updateEventList();
 	}
 	
+	/**
+	 * Serializuje wszystkie obiekty do bazy danych SQL Server.
+	 * @param saveLocation nazwa bazy danych.
+	 */
 	public void SerializeSqlServer(String saveLocation){
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
@@ -356,7 +417,11 @@ public class EventContainer implements ObjectContainer, Tickable {
         db.execute(finalUpdate.toString());
 	}
 	
-	public void DeserializeSqlServer(String saveLocation){
+	/**
+	 * Deserializuje wszystkie obiekty z bazy danych SQL Server.
+	 * @param loadLocation nazwa bazy danych do odczytu.
+	 */
+	public void DeserializeSqlServer(String loadLocation){
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
         ResultSet rs = db.executeWithResult("use componentProject; select nazwa,data, description, place, reminder from events");
@@ -380,6 +445,10 @@ public class EventContainer implements ObjectContainer, Tickable {
         window.updateEventList();
 	}
 	
+	/**
+	 * Serializuje wszystkie obiekty do bazy danych Sqlite.
+	 * @param saveLocation nazwa pliku bazy danych.
+	 */
 	public void SerializeSqlite(String saveLocation){
 		SqliteDatabase db= new SqliteDatabase();
 		db.dbConnect(saveLocation);
@@ -392,9 +461,14 @@ public class EventContainer implements ObjectContainer, Tickable {
         db.execute(finalUpdate.toString());
 	}
 	
-	public void DeserializeSqlite(String saveLocation){
+	
+	/**
+	 * Deserializuje wszystkie obiekty z bazy danych Sqlite
+	 * @param loadLocation nazwa pliku bazy danych.
+	 */
+	public void DeserializeSqlite(String loadLocation){
 		SqliteDatabase db= new SqliteDatabase();
-		db.dbConnect(saveLocation);
+		db.dbConnect(loadLocation);
 		ResultSet rs = db.executeWithResult("select nazwa,data, description, place, reminder from events");
         try{
         	ArrayList<Event> nowe = new ArrayList<Event>();
@@ -415,7 +489,10 @@ public class EventContainer implements ObjectContainer, Tickable {
 		}
         window.updateEventList();
 	}
-
+	
+	/**
+	 * Wykonuje operacje czasowe. Odpowiada za sprawdzanie alertów. Jest wywo³ywane przez klasê Timer.
+	 */
 	@Override
 	public void timeTick() {
 		System.out.println("Tick");		

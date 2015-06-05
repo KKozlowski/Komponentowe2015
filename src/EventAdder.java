@@ -38,7 +38,7 @@ import sun.security.krb5.internal.crypto.DesCbcCrcEType;
 import java.awt.Dimension;
 
 
-public class EventAdder extends JFrame {
+public class EventAdder extends JFrame implements DateReceiver {
 	private Event toAdd = new Event();
 	private JPanel contentPane;
 	private JTextField nameField;
@@ -230,12 +230,18 @@ public class EventAdder extends JFrame {
 		});
 	}
 	
+	/**
+	 * Otwiera okno kalendarza.
+	 */
 	void openCalendar(){
 		VisualCallendar vc = new VisualCallendar(this);
 		vc.setVisible(true);
 	}
 	
-	void setEventDate(int day, int month, int year){
+	/**
+	 * Przyjmuje datê.
+	 */
+	public void sendDate(int day, int month, int year){
 		action.setLabel(day + "/" + month + "/" + year);
 	}
 	

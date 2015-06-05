@@ -19,9 +19,10 @@ import com.thoughtworks.xstream.XStream;
 
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 
-public class Window extends JFrame  {
+public class Window extends JFrame   {
 	private EventContainer events;
 	private JPanel contentPane;
 	private JList eventList;
@@ -52,10 +53,7 @@ public class Window extends JFrame  {
 	 */
 	public Window() {
 		setTitle("Organizer");
-		
-		
-		//Code();
-		XStream xst = new XStream();
+
 		events = new EventContainer(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 514, 440);
@@ -160,8 +158,7 @@ public class Window extends JFrame  {
 		events.loadObjects();
 		events.print();
 		
-		EventAdder a = new EventAdder(events, true);
-		a.setVisible(true);
+		
 	}
 
 	private class SwingAction extends AbstractAction {
@@ -171,13 +168,19 @@ public class Window extends JFrame  {
 		}
 		public void actionPerformed(ActionEvent e) {
 			Code();
+			EventAdder a = new EventAdder(events, true);
+			a.setVisible(true);
 		}
 	}
 
 	
+	/**
+	 * Aktualizuje wyœwietlan¹ listê zdarzeñ.
+	 */
 	public void updateEventList(){
 		if (eventList != null) eventList.setListData(events.ToStringArray());
 	}
+	
 	private class SwingAction_2 extends AbstractAction {
 		public SwingAction_2() {
 			putValue(NAME, "Usuñ zdarzenie");
@@ -188,6 +191,7 @@ public class Window extends JFrame  {
 			updateEventList();
 		}
 	}
+	
 	private class SaveAction extends AbstractAction {
 		public SaveAction() {
 			putValue(NAME, "Save");
@@ -214,36 +218,40 @@ public class Window extends JFrame  {
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
 		public void actionPerformed(ActionEvent e) {
-			EventAdder ea = new EventAdder(events, false);
-			ea.setEvent(selectedItemIndex);
-			ea.setVisible(true);
+			if(selectedItemIndex>=0){
+				EventAdder ea = new EventAdder(events, false);
+				ea.setEvent(selectedItemIndex);
+				ea.setVisible(true);
+			}
 		}
 	}
-	private class FilterAction extends AbstractAction {
+	
+	private class FilterAction extends AbstractAction implements DateReceiver {
 		public FilterAction() {
 			putValue(NAME, "Filtruj wed³ug daty");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
 		public void actionPerformed(ActionEvent e) {
 			if (!events.getFiltered()){
-				Event ev = new Event();
-				try {
-					ev.setDate("03/03/2014");
-				} catch (DateFormatException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				events.dateFilter(ev.getDate(), true);
-				updateEventList();
-				addEventButton.setEnabled(false);
-				putValue(NAME, "Cofnij filtrowanie");
 				
+				VisualCallendar vis = new VisualCallendar(this);
+				vis.setVisible(true);
 			} else {
 				events.defilter();
 				updateEventList();
 				putValue(NAME, "Filtruj wed³ug daty");
 				addEventButton.setEnabled(true);
 			}
+		}
+		
+		@Override
+		public void sendDate(int day, int month, int year) {
+			GregorianCalendar cal1 = new GregorianCalendar(year,month-1,day,0,1);
+			GregorianCalendar cal2 = new GregorianCalendar(year,month-1,day,23,59);
+			events.dateFilter(cal1.getTime(), cal2.getTime());
+			updateEventList();
+			addEventButton.setEnabled(false);
+			putValue(NAME, "Cofnij filtrowanie");
 		}
 	}
 	private class DeletePastAction extends AbstractAction {
@@ -255,4 +263,7 @@ public class Window extends JFrame  {
 			events.deleteBefore(new Date());
 		}
 	}
+
+
+	
 }

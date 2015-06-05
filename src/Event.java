@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
+/**
+ * Klasa przechowuj¹ca dane poszczególnych zdarzeñ.
+ */
 public class Event implements Comparable<Event>, Comparator<Event>, Serializable, Individual, Chronologic, Cloneable{
 	private String name;
 	private Date data = new Date();
@@ -14,7 +17,14 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	private String place;
 	private int reminderTime;
 	private Comparator<Event> comparator;
+	
+	/**
+	 * Statyczny obiekt s³u¿¹cy do parsowania stringów w formacie "dd/MM/yyyy" na daty.
+	 */
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	/**
+	 * Statyczny obiekt s³u¿¹cy do parsowania stringów w formacie "dd/MM/yyyy HH:mm" na daty.
+	 */
 	private static SimpleDateFormat sdfHour = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	//private GregorianCalendar date = new GregorianCalendar();
 	
@@ -24,6 +34,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		description = "";
 		place = "";
 	}
+	
 	
 	public Event(String name, String dataa) throws DateFormatException {
 		this();
@@ -43,7 +54,12 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		setDateHour(dataa);
 		setDescription(description);
 	}
-
+	
+	/**
+	 * Podstawowa metoda s³u¿¹ca do serializacji pól obiektu.
+	 * @param o strumieñ do którego s¹ zapisywane dane.
+	 * @throws IOException potencjalne b³êdy zapisu obiektów.
+	 */
 	 private void writeObject(ObjectOutputStream o)
 	   throws IOException {  
 		 o.writeObject(name);
@@ -53,6 +69,12 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		 o.writeObject(reminderTime);
 	 }
 	  
+	 /**
+	  * Metoda s³u¿¹ca do wczytywania pól obiektu ze strumienia.
+	  * @param o
+	  * @throws IOException
+	  * @throws ClassNotFoundException
+	  */
 	 private void readObject(ObjectInputStream o)
 	    throws IOException, ClassNotFoundException {  
 		 name = (String) o.readObject();
@@ -62,42 +84,72 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		 reminderTime = (int)o.readObject();
 	 }
 	
+	 /**
+	  * Zwraca nazwê zdarzenia.
+	  */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Ustawia nazwê zdarzenia.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	/**
+	 * Ustawia opis zdarzenia.
+	 * @param desc Opis
+	 */
 	public void setDescription(String desc){
 		this.description = desc;
 	}
 	
+	/**
+	 * 
+	 * @return Zwraca opis zdarzenia.
+	 */
 	public String getDescription(){
 		return description;
 	}
 	
+	/**
+	 * @param desc Miejsce zdarzenia do ustawienia.
+	 */
 	public void setPlace(String desc){
 		this.place = desc;
 	}
 	
+	/**
+	 * @return Miejsce zdarzenia.
+	 */
 	public String getPlace(){
 		return place;
 	}
-	
+
 	public void setReminder(String mm){
 		this.reminderTime = Integer.parseInt(mm);
 	}
 	
+	/**
+	 * Ustawia czas do zdarzenia, przed którym program wywo³a przypomnienie.
+	 * @param mm Czas w minutach
+	 */
 	public void setReminder(int mm){
 		this.reminderTime = mm;
 	}
 	
+	/**
+	 * @return Czas przypomnienia przed zdarzeniem w minutach.
+	 */
 	public int getReminder(){
 		return reminderTime;
 	}
 	
+	/**
+	 * Ustawia datê w formacie "dd/MM/yyyy"
+	 */
 	public void setDate (String dat) throws DateFormatException{
 	    Date d; 
 	    try {
@@ -108,6 +160,9 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	    
 	}
 	
+	/**
+	 * Ustawia datê w formacie "dd/MM/yyyy HH:mm"
+	 */
 	public void setDateHour(String dat) throws DateFormatException{
 	    Date d; 
 	    try {
@@ -118,27 +173,45 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	    
 	}
 	
+	/**
+	 * Ustawia datê wed³ug liczby milisekund od 01.01.1970
+	 */
 	public void setDate(long dataa){
 		data.setTime(dataa);
 	}
 	
+	/**
+	 * @return Data zdarzenia
+	 */
 	public Date getDate(){
 		return data;
 	}
 	
+	/**
+	 * @return Data zdarzenia w formacie "dd/MM/yyyy HH:mm"
+	 */
 	public String getDateHour(){
 		return sdfHour.format(data);
 	}
 	
+	/**
+	 * @return Godzina zdarzenia w formacie "HH:mm"
+	 */
 	public String getHour(){
 		SimpleDateFormat hour = new SimpleDateFormat("HH:mm");
 		return hour.format(data);
 	}
 	
+	/**
+	 * @return Data zdarzenia w formacie "dd/MM/yyyy"
+	 */
 	public String getDay(){
 		return sdf.format(data);
 	}
 	
+	/**
+	 * @return Data jako liczba milisekund od 01.01.1970
+	 */
 	public long getMiliseconds(){
 		return data.getTime();
 	}
