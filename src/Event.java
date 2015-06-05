@@ -18,6 +18,8 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	private int reminderTime;
 	private Comparator<Event> comparator;
 	
+	public boolean remindedAbout = false;
+	
 	/**
 	 * Statyczny obiekt s³u¿¹cy do parsowania stringów w formacie "dd/MM/yyyy" na daty.
 	 */
@@ -130,6 +132,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 
 	public void setReminder(String mm){
 		this.reminderTime = Integer.parseInt(mm);
+		remindedAbout = false;
 	}
 	
 	/**
@@ -138,6 +141,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	 */
 	public void setReminder(int mm){
 		this.reminderTime = mm;
+		remindedAbout = false;
 	}
 	
 	/**
@@ -157,7 +161,6 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	    } catch ( ParseException pe){
 	    	throw new DateFormatException();
 	    }
-	    
 	}
 	
 	/**
@@ -170,7 +173,6 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	    } catch ( ParseException pe){
 	    	throw new DateFormatException();
 	    }
-	    
 	}
 	
 	/**

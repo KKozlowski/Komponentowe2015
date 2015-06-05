@@ -182,7 +182,7 @@ public class EventAdder extends JFrame implements DateReceiver {
 		hourField.setColumns(10);
 		
 		reminderField = new JTextField();
-		reminderField.setText("0");
+		reminderField.setText("15");
 		reminderField.setBounds(10, 292, 264, 20);
 		contentPane.add(reminderField);
 		reminderField.setColumns(10);

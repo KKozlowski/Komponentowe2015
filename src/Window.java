@@ -2,6 +2,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -10,7 +13,9 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -18,6 +23,9 @@ import javax.swing.event.ListSelectionListener;
 import com.thoughtworks.xstream.XStream;
 
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -122,7 +130,7 @@ public class Window extends JFrame   {
 		events.sort();
 		updateEventList();
 		
-		this.addWindowListener(new WindowAdapter()  {
+		/*this.addWindowListener(new WindowAdapter()  {
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -135,9 +143,9 @@ public class Window extends JFrame   {
 						e1.printStackTrace();
 					}
 			}
-		});
+		});*/
 		
-		timer = new Timer(events, 2000);
+		timer = new Timer(events, 10000);
 		timer.start();
 	}
 	
@@ -158,6 +166,40 @@ public class Window extends JFrame   {
 		events.loadObjects();
 		events.print();
 		
+		
+	}
+	
+	/**
+	 * Wydaje dŸwiêk "boop".
+	 */
+	private void boop(){
+		Clip clip = null;
+		try{
+	        clip = AudioSystem.getClip();
+		}catch(Exception e){
+			e.printStackTrace();
+			return;
+		}
+		
+		try{
+	        // getAudioInputStream() also accepts a File or InputStream
+	        AudioInputStream ais = AudioSystem.
+	            getAudioInputStream( new File("boop.wav") );
+	        clip.open(ais);
+	        clip.loop(0);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void remindEventMessage(final Event ev, final int time){
+		SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            	boop();
+            	JOptionPane.showMessageDialog(null, "Zbli¿a siê zdarzenie o nazwie " +ev.getName()+ ".\n Pozosta³y czas: " + time);
+            	
+            }
+        });
 		
 	}
 

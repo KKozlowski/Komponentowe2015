@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.io.*;
 
 import com.thoughtworks.xstream.XStream;
@@ -495,6 +496,14 @@ public class EventContainer implements ObjectContainer, Tickable {
 	 */
 	@Override
 	public void timeTick() {
-		System.out.println("Tick");		
+		long currentTime = (new GregorianCalendar()).getTimeInMillis()/1000/60;
+		for(Event e : eventy){
+			long eventTime = e.getMiliseconds()/1000/60;
+			int diff = (int) (eventTime-currentTime);
+			if (e.remindedAbout == false && diff>0 && diff < e.getReminder()){
+				window.remindEventMessage(e, diff);
+				e.remindedAbout = true;
+			}
+		}	
 	}
 }
