@@ -66,6 +66,8 @@ public class SaveLoadWindow extends JFrame {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
+			if(events.getFiltered())
+				events.window.defilter();
 			String name = fileName.getText();
 			if(isToSave)
 				switch (comboBox.getSelectedIndex()){
@@ -98,6 +100,7 @@ public class SaveLoadWindow extends JFrame {
 				}
 			System.out.println(comboBox.getSelectedIndex());
 			dispose();
+			
 		}
 	}
 }

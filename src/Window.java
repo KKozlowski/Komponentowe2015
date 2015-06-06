@@ -305,11 +305,15 @@ public class Window extends JFrame   {
 				VisualCallendar vis = new VisualCallendar(this);
 				vis.setVisible(true);
 			} else {
-				events.defilter();
-				updateEventList();
-				putValue(NAME, "Filtruj wed³ug daty");
-				addEventButton.setEnabled(true);
+				defilter();
 			}
+		}
+		
+		public void defilter(){
+			events.defilter();
+			updateEventList();
+			putValue(NAME, "Filtruj wed³ug daty");
+			addEventButton.setEnabled(true);
 		}
 		
 		@Override
@@ -321,6 +325,10 @@ public class Window extends JFrame   {
 			addEventButton.setEnabled(false);
 			putValue(NAME, "Cofnij filtrowanie");
 		}
+	}
+	
+	void defilter(){
+		((FilterAction)action_2).defilter();
 	}
 	
 	/**
