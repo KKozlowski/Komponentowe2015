@@ -30,26 +30,45 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	private static SimpleDateFormat sdfHour = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	//private GregorianCalendar date = new GregorianCalendar();
 	
-
+	/**
+	 * Podstawowy konstruktor pozostawiaj¹cy wszystkie pola pustymi.
+	 */
 	public Event(){
 		comparator = new DateComparator();
 		description = "";
 		place = "";
 	}
 	
-	
+	/**
+	 * Konstruktor przyjmuj¹cy nazwê i datê.
+	 * @param name Nazwa zdarzenia.
+	 * @param dataa Data w formie ci¹gu znaków "dd/MM/yyyy".
+	 * @throws DateFormatException Mo¿liwoœæ b³êdnego odczytu daty.
+	 */
 	public Event(String name, String dataa) throws DateFormatException {
 		this();
 		setName(name);
 		setDate(dataa);
 	}
 	
+	/**
+	 * Konstruktor przyjmuj¹cy nazwê i datê.
+	 * @param name Nazwa zdarzenia.
+	 * @param dataa Data jako suma milisekund od 01.01.1970.
+	 */
 	public Event (String name, long dataa){
 		this();
 		setName(name);
 		setDate(dataa);
 	}
 	
+	/**
+	 * Konstruktor przyjmuj¹cy nazwê, datê i opis.
+	 * @param name Nazwa zdarzenia.
+	 * @param dataa Data w formie ci¹gu znaków "dd/MM/yyyy".
+	 * @param description Opis zdarzenia.
+	 * @throws DateFormatException Mo¿liwoœæ b³êdnego odczytu daty.
+	 */
 	public Event (String name, String dataa, String description) throws DateFormatException{
 		this();
 		setName(name);
@@ -73,7 +92,7 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	  
 	 /**
 	  * Metoda s³u¿¹ca do wczytywania pól obiektu ze strumienia.
-	  * @param o
+	  * @param o Strumieñ odczytu.
 	  * @throws IOException
 	  * @throws ClassNotFoundException
 	  */
@@ -109,8 +128,8 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	}
 	
 	/**
-	 * 
-	 * @return Zwraca opis zdarzenia.
+	 * Zwraca opis zdarzenia.
+	 * @return Opis zdarzenia.
 	 */
 	public String getDescription(){
 		return description;
@@ -129,7 +148,11 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	public String getPlace(){
 		return place;
 	}
-
+	
+	/**
+	 * Ustawia czas do zdarzenia, przed którym program wywo³a przypomnienie.
+	 * @param mm Czas w minutach, podany jako ci¹g znaków.
+	 */
 	public void setReminder(String mm){
 		this.reminderTime = Integer.parseInt(mm);
 		remindedAbout = false;

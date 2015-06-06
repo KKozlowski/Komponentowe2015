@@ -34,9 +34,9 @@ public class Window extends JFrame   {
 	private EventContainer events;
 	private JPanel contentPane;
 	private JList eventList;
-	private final Action action = new SwingAction();
+	private final Action action = new AddAction();
 	private JButton deleteEventButton;
-	private final Action action_1 = new SwingAction_2();
+	private final Action action_1 = new RemoveAction();
 	
 	private int selectedItemIndex = -1;
 	private JMenuBar menuBar;
@@ -57,7 +57,7 @@ public class Window extends JFrame   {
 	private final Action action_3 = new DeletePastAction();
 
 	/**
-	 * Create the frame.
+	 * Tworzy g³ówne okno
 	 */
 	public Window() {
 		setTitle("Organizer");
@@ -149,7 +149,7 @@ public class Window extends JFrame   {
 		timer.start();
 	}
 	
-	private void Code(){	
+	/*private void Code(){	
 		SerializowanaTablica ser = new SerializowanaTablica(15,70);
 		ser.wypisz();
 		ser.save("data/inty.bin");
@@ -167,7 +167,7 @@ public class Window extends JFrame   {
 		events.print();
 		
 		
-	}
+	}*/
 	
 	/**
 	 * Wydaje dŸwiêk "boop".
@@ -192,6 +192,11 @@ public class Window extends JFrame   {
 		}
 	}
 	
+	/**
+	 * Wywo³uje przypomnienie o zdarzeniu w formie okna komunikatu oraz dŸwiêku.
+	 * @param Przypominane zdarzenie
+	 * @param Czas do zdarzenia.
+	 */
 	public void remindEventMessage(final Event ev, final int time){
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -202,19 +207,6 @@ public class Window extends JFrame   {
         });
 		
 	}
-
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
-			putValue(NAME, "Dodaj zdarzenie");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-		public void actionPerformed(ActionEvent e) {
-			Code();
-			EventAdder a = new EventAdder(events, true);
-			a.setVisible(true);
-		}
-	}
-
 	
 	/**
 	 * Aktualizuje wyœwietlan¹ listê zdarzeñ.
@@ -223,8 +215,28 @@ public class Window extends JFrame   {
 		if (eventList != null) eventList.setListData(events.ToStringArray());
 	}
 	
-	private class SwingAction_2 extends AbstractAction {
-		public SwingAction_2() {
+	/**
+	 * Otwiera okno dodawania zdarzenia.
+	 */
+	private class AddAction extends AbstractAction {
+		public AddAction() {
+			putValue(NAME, "Dodaj zdarzenie");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+			//Code();
+			EventAdder a = new EventAdder(events, true);
+			a.setVisible(true);
+		}
+	}
+
+	
+	
+	/**
+	 * Usuwanie zaznaczonego zdarzenia.
+	 */
+	private class RemoveAction extends AbstractAction {
+		public RemoveAction() {
 			putValue(NAME, "Usuñ zdarzenie");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
@@ -234,6 +246,9 @@ public class Window extends JFrame   {
 		}
 	}
 	
+	/**
+	 * Otwiera okno serializacji zdarzeñ.
+	 */
 	private class SaveAction extends AbstractAction {
 		public SaveAction() {
 			putValue(NAME, "Save");
@@ -244,6 +259,10 @@ public class Window extends JFrame   {
 			slw.setVisible(true);
 		}
 	}
+	
+	/**
+	 * Otwiera okno deserializacji zdarzeñ.
+	 */
 	private class LoadAction extends AbstractAction {
 		public LoadAction() {
 			putValue(NAME, "Load");
@@ -254,6 +273,10 @@ public class Window extends JFrame   {
 			slw.setVisible(true);
 		}
 	}
+	
+	/**
+	 * Otwiera okno edycji zdarzenia.
+	 */
 	private class EditAction extends AbstractAction {
 		public EditAction() {
 			putValue(NAME, "Edytuj zdarzenie");
@@ -268,6 +291,9 @@ public class Window extends JFrame   {
 		}
 	}
 	
+	/**
+	 * Otwiera okno ustawieñ filtrowania zdarzeñ. Po wykonaniu operacji filtrowania s³u¿y do jej cofniêcia.
+	 */
 	private class FilterAction extends AbstractAction implements DateReceiver {
 		public FilterAction() {
 			putValue(NAME, "Filtruj wed³ug daty");
@@ -296,6 +322,10 @@ public class Window extends JFrame   {
 			putValue(NAME, "Cofnij filtrowanie");
 		}
 	}
+	
+	/**
+	 * Usuwa minione zdarzenia.
+	 */
 	private class DeletePastAction extends AbstractAction {
 		public DeletePastAction() {
 			putValue(NAME, "Usuñ minione zdarzenia");

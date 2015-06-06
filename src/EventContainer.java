@@ -15,6 +15,9 @@ import java.io.*;
 
 import com.thoughtworks.xstream.XStream;
 
+/**
+ * Klasa s³u¿¹ca do wykonywania podtawowych operacji na danych oraz serializowania ich.
+ */
 public class EventContainer implements ObjectContainer, Tickable {
 	ArrayList<Event> eventy = new ArrayList<Event>();
 	Window window;
@@ -82,12 +85,15 @@ public class EventContainer implements ObjectContainer, Tickable {
 		printList(eventy);
 	}
 	
+	/**
+	 * Sortuje przechowywane zdarzenia wed³ug daty.
+	 */
 	public void sort(){
 		eventy.sort(new Event().new DateComparator());
 		if (window!= null) window.updateEventList();
 	}
 	
-	public void getEvents(){
+	/*public void getEvents(){
 		Inputter inp = new Inputter();
 		while(true){
 			String nazwa = inp.getString("Podaj nazwe zdarzenia:");
@@ -107,13 +113,13 @@ public class EventContainer implements ObjectContainer, Tickable {
 		} catch (DateFormatException d) {
 			System.out.println(d.getMessage());
 		}
-	}
+	}*/
 	
 	public int getSize(){
 		return eventy.size();
 	}
 	
-	public void saveToBin(){
+	/*public void saveToBin(){
 		try {
 			DataOutputStream eventStream = 		// Strumien zapisujacy liczby
 				new DataOutputStream(new FileOutputStream("data/events.bin")); 
@@ -204,7 +210,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 		} catch (IOException e) {
 			System.out.println("Wystapil blad podczas wczytywania danych");
 		}
-	}
+	}*/
 	
 	/**
 	 * Dodaje nowy obiekt typu Event do listy.
@@ -220,7 +226,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 	
 	/**
 	 * Usuwa obiekt o podanym indeksie na liœcie.
-	 * @param i
+	 * @param i Indeks usuwanego obiektu.
 	 */
 	public void removeAt(int i){
 		if(i>=0 && i< eventy.size()) {
@@ -306,6 +312,10 @@ public class EventContainer implements ObjectContainer, Tickable {
 		window.updateEventList();
 	}
 	
+	/**
+	 * Pozwala ustawiæ referencjê do okna ju¿ po stworzeniu obiektu.
+	 * @param win Ustawiane okno.
+	 */
 	public void SetWindow(Window win){
 		window = win;
 	}

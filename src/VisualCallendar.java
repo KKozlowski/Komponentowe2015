@@ -21,7 +21,9 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 
 
-
+/**
+ * Graficzny kalendarz s³u¿¹cy do wybierania dat i wysy³ania ich do innych klas.
+ */
 public class VisualCallendar extends JFrame {
 	
 	String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -32,16 +34,14 @@ public class VisualCallendar extends JFrame {
 
 	private int currentMonth;
 	private int currentYear;
-
-	/**
-	 * Create the frame.
-	 */
 	
 	public ArrayList<ArrayList<GridButton>> days = new ArrayList<ArrayList<GridButton>>();
-	private final Action previousMonth = new SwingAction();
-	private final Action nextMonth = new SwingAction_1();
+	private final Action previousMonth = new PrevAction();
+	private final Action nextMonth = new NextAction();
 	
-	
+	/**
+	 * Tworzy nowe okno.
+	 */
 	public  VisualCallendar() {
 		GregorianCalendar gregor = new GregorianCalendar();
 		System.out.println(gregor.get(Calendar.DAY_OF_MONTH));
@@ -89,11 +89,20 @@ public class VisualCallendar extends JFrame {
 		
 	}
 	
+	/**
+	 * Tworzy nowe okno.
+	 * @param eve Klasa, do której zostanie wys³ana wybrana data.
+	 */
 	public VisualCallendar(DateReceiver eve){
 		this();
 		ea = eve;
 	}
 	
+	/**
+	 * Zmienia wyœwietlany miesiac.
+	 * @param month Wybrany miesi¹c.
+	 * @param year Wybrany rok.
+	 */
 	private void updateCalendar(int month, int year) { //0 is January
 		reset();
 		currentMonth = month;
@@ -115,10 +124,16 @@ public class VisualCallendar extends JFrame {
 		monthLabel.setText(months[month] + " " + year);
 	} 
 	
+	/**
+	 * Aktualizuje kalendarz wed³ug przechowywanych w obiekcie pól ca³kowitych.
+	 */
 	private void updateCalendar(){
 		updateCalendar(currentMonth, currentYear);
 	}
 	
+	/**
+	 * Czyœci wszystkie pola kalendarza.
+	 */
 	private void reset(){
 		for(int i=0; i<6; i++){
 			for(int k=0; k<7; k++){
@@ -127,11 +142,18 @@ public class VisualCallendar extends JFrame {
 		}
 	}
 	
+	/**
+	 * Operacje zwi¹zane z wybraniem dnia. Wysy³a komunikat do obiektu implementuj¹cego interfejs DateReceiver.
+	 * @param day Wybrany dzieñ.
+	 */
 	private void chooseDay(int day){
 		ea.sendDate(day, currentMonth+1, currentYear);
 		dispose();
 	}
 
+	/**
+	 * Przycisk przedstawiaj¹cy dzieñ w kalendarzu. Wywo³uje metodê chooseDay po kliknieciu.
+	 */
 	private class GridButton extends JButton{
 		int row;
 		int column;
@@ -176,8 +198,12 @@ public class VisualCallendar extends JFrame {
 			}
 		}
 	}
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
+	
+	/**
+	 * Zmienia wyœwietlany miesi¹c na poprzedni.
+	 */
+	private class PrevAction extends AbstractAction {
+		public PrevAction() {
 			putValue(NAME, "<");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
@@ -190,8 +216,12 @@ public class VisualCallendar extends JFrame {
 			updateCalendar();
 		}
 	}
-	private class SwingAction_1 extends AbstractAction {
-		public SwingAction_1() {
+	
+	/**
+	 * Zmienia wyœwietlany miesi¹c na nastêpny.
+	 */
+	private class NextAction extends AbstractAction {
+		public NextAction() {
 			putValue(NAME, ">");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}

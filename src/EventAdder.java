@@ -37,7 +37,9 @@ import sun.security.krb5.internal.crypto.DesCbcCrcEType;
 
 import java.awt.Dimension;
 
-
+/**
+ * Okno tworzenia lub edytowanie zdarzeñ.
+ */
 public class EventAdder extends JFrame implements DateReceiver {
 	private Event toAdd = new Event();
 	private JPanel contentPane;
@@ -53,9 +55,10 @@ public class EventAdder extends JFrame implements DateReceiver {
 	JButton addButton;
 
 	/**
-	 * Create the frame.
+	 * Tworzy okno EventAddera
+	 * @param ev Kontener zdarzeñ stanowi¹cy kontekst danych.
+	 * @param addingOnly Czy okno bêdzie dodawa³o nowe zdarzenie (true), czy edytowa³o ju¿ istniej¹ce (false)
 	 */
-
 	public EventAdder(EventContainer ev, boolean addingOnly) {
 		events = ev;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -94,9 +97,6 @@ public class EventAdder extends JFrame implements DateReceiver {
 		JLabel lblMiejsceZdarzenia = new JLabel("Miejsce zdarzenia");
 		lblMiejsceZdarzenia.setBounds(10, 157, 264, 14);
 		contentPane.add(lblMiejsceZdarzenia);
-		
-
-		
 		
 		if(addingOnly){
 			addButton = new JButton("Dodaj");
@@ -188,6 +188,10 @@ public class EventAdder extends JFrame implements DateReceiver {
 		reminderField.setColumns(10);
 	}
 	
+	/**
+	 * Ustawia edytowane zdarzenie, je¿eli EventAdder jest u¿ywany w forme edytora.
+	 * @param targetIndex Indeks edytowanego zdarzenia w EventContainerze podanym poprzez konstruktor.
+	 */
 	public void setEvent(int targetIndex){
 		final EventContainer events = this.events;
 		final Event target = events.get(targetIndex);
@@ -239,7 +243,7 @@ public class EventAdder extends JFrame implements DateReceiver {
 	}
 	
 	/**
-	 * Przyjmuje datê.
+	 * Przyjmuje datê z kalendarza.
 	 */
 	public void sendDate(int day, int month, int year){
 		action.setLabel(day + "/" + month + "/" + year);
