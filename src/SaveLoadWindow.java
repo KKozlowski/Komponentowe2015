@@ -42,7 +42,10 @@ public class SaveLoadWindow extends JFrame {
 		fileName.setColumns(10);
 		
 		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"XML (Java)", "XML (Xstream)", "SQL Server", "Sqlite"}));
+		if(toSave)
+			comboBox.setModel(new DefaultComboBoxModel(new String[] {"XML (Java)", "XML (Xstream)", "SQL Server", "Sqlite", "iCalendar"}));
+		else
+			comboBox.setModel(new DefaultComboBoxModel(new String[] {"XML (Java)", "XML (Xstream)", "SQL Server", "Sqlite"}));
 		comboBox.setBounds(225, 11, 96, 20);
 		contentPane.add(comboBox);
 		
@@ -82,6 +85,9 @@ public class SaveLoadWindow extends JFrame {
 					break;
 				case 3:
 					events.SerializeSqlite(name);
+					break;
+				case 4:
+					events.SaveToICal(name);
 					break;
 				}
 			else

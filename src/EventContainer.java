@@ -12,6 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.io.*;
+import java.net.SocketException;
+
+import net.fortuna.ical4j.data.*;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.UidGenerator;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -499,6 +506,46 @@ public class EventContainer implements ObjectContainer, Tickable {
 			e.printStackTrace();
 		}
         window.updateEventList();
+	}
+	
+	public void SaveToICal(String saveLocation){
+		FileOutputStream fout = null;
+		try {
+			fout = new FileOutputStream(saveLocation);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		net.fortuna.ical4j.model.Calendar icsCalendar = new net.fortuna.ical4j.model.Calendar();
+		icsCalendar.getProperties().add(new ProdId("-//Events Calendar//iCal4j 1.0//EN"));
+		icsCalendar.getProperties().add(Version.VERSION_2_0);
+		icsCalendar.getProperties().add(CalScale.GREGORIAN);
+		
+		UidGenerator ug = null;
+		try {
+			ug = new UidGenerator("1");
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		for(Event e: eventy){
+			DateTime dt = new DateTime(e.getMiliseconds());
+			VEvent v = new VEvent(dt, e.getName());
+			v.getProperties().add(ug.generateUid());
+			v.getProperties().add(new Description(e.getDescription()));
+			v.getProperties().add(new Location(e.getPlace()));
+			icsCalendar.getComponents().add(v);
+		}
+		
+		CalendarOutputter outputter = new CalendarOutputter();
+		try {
+			outputter.output(icsCalendar, fout);
+		} catch (IOException | ValidationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

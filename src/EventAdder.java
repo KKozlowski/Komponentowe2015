@@ -109,6 +109,7 @@ public class EventAdder extends JFrame implements DateReceiver {
 					try {
 						toAdd.setDate(action.getLabel());
 						toAdd.setDateHour(action.getLabel() + " " + hourField.getText());
+						toAdd.setPlace(placeField.getText());
 						hourField.setBackground(Color.WHITE);
 					} catch (DateFormatException d) {
 						hourField.setBackground(Color.RED);
@@ -209,6 +210,7 @@ public class EventAdder extends JFrame implements DateReceiver {
 				boolean noProblems = true;
 				target.setName(nameField.getText());
 				target.setDescription(descriptionField.getText());
+				target.setPlace(placeField.getText());
 				try {
 					target.setDate(action.getLabel());
 					target.setDateHour(action.getLabel() + " " + hourField.getText());
