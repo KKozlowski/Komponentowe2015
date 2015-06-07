@@ -29,14 +29,16 @@ import java.net.URL;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-
+/**
+ * G³ówne okno programu.
+ */
 public class Window extends JFrame   {
 	private EventContainer events;
 	private JPanel contentPane;
 	private JList eventList;
 	private final Action action = new AddAction();
 	private JButton deleteEventButton;
-	private final Action action_1 = new RemoveAction();
+	private final Action removeAction = new RemoveAction();
 	
 	private int selectedItemIndex = -1;
 	private JMenuBar menuBar;
@@ -50,18 +52,19 @@ public class Window extends JFrame   {
 	private JButton modifyEventButton;
 	private final EditAction editAction = new EditAction();
 	private JButton filterButton;
-	private final Action action_2 = new FilterAction();
+	private final Action filterAction = new FilterAction();
 	
 	JButton addEventButton;
 	private JButton deletePastButton;
-	private final Action action_3 = new DeletePastAction();
+	private final Action deletePastAction = new DeletePastAction();
+	private JMenuItem aboutButton;
 
 	/**
 	 * Tworzy g³ówne okno
 	 */
 	public Window() {
 		setTitle("Organizer");
-
+		setResizable(false);
 		events = new EventContainer(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 514, 440);
@@ -79,6 +82,17 @@ public class Window extends JFrame   {
 		loadButton = new JMenuItem("Load");
 		loadButton.setAction(loadAction);
 		mnFileMenu.add(loadButton);
+		
+		aboutButton = new JMenuItem("About");
+		aboutButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AboutWindow aw = new AboutWindow();
+				aw.setVisible(true);
+			}
+		});
+		mnFileMenu.add(aboutButton);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -102,7 +116,7 @@ public class Window extends JFrame   {
 		});
 		
 		deleteEventButton = new JButton("Usu\u0144 zdarzenie");
-		deleteEventButton.setAction(action_1);
+		deleteEventButton.setAction(removeAction);
 		deleteEventButton.setBounds(295, 75, 193, 53);
 		contentPane.add(deleteEventButton);
 		
@@ -112,7 +126,7 @@ public class Window extends JFrame   {
 		contentPane.add(modifyEventButton);
 		
 		filterButton = new JButton("");
-		filterButton.setAction(action_2);
+		filterButton.setAction(filterAction);
 		filterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
@@ -121,7 +135,7 @@ public class Window extends JFrame   {
 		contentPane.add(filterButton);
 		
 		deletePastButton = new JButton("");
-		deletePastButton.setAction(action_3);
+		deletePastButton.setAction(deletePastAction);
 		deletePastButton.setBounds(295, 263, 193, 53);
 		contentPane.add(deletePastButton);
 		eventList.setBounds(10, 11, 275, 358);
@@ -194,8 +208,8 @@ public class Window extends JFrame   {
 	
 	/**
 	 * Wywo³uje przypomnienie o zdarzeniu w formie okna komunikatu oraz dŸwiêku.
-	 * @param Przypominane zdarzenie
-	 * @param Czas do zdarzenia.
+	 * @param ev Przypominane zdarzenie
+	 * @param time Czas do zdarzenia.
 	 */
 	public void remindEventMessage(final Event ev, final int time){
 		SwingUtilities.invokeLater(new Runnable() {
@@ -327,8 +341,12 @@ public class Window extends JFrame   {
 		}
 	}
 	
+	/**
+	 * Pozwala cofn¹æ filtrowanie zdarzeñ z zewn¹trz, je¿eli filtrowanie nast¹pi³o.
+	 */
 	void defilter(){
-		((FilterAction)action_2).defilter();
+		if(events.getFiltered())
+			((FilterAction)filterAction).defilter();
 	}
 	
 	/**

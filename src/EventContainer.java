@@ -26,10 +26,29 @@ import com.thoughtworks.xstream.XStream;
  * Klasa s³u¿¹ca do wykonywania podtawowych operacji na danych oraz serializowania ich.
  */
 public class EventContainer implements ObjectContainer, Tickable {
+	/**
+	 * Lista zdarzeñ
+	 */
 	ArrayList<Event> eventy = new ArrayList<Event>();
+	
+	/**
+	 * Okno powi¹zane z logik¹.
+	 */
 	Window window;
+	
+	/**
+	 * Serializator xstream
+	 */
 	XStream xstream;
+	
+	/**
+	 * Wskazuje, czy kontener jest w trakcie filtrowania.
+	 */
 	private boolean isFiltered;
+	
+	/**
+	 * Kopia list zdarzeñ na czas filtrowania.
+	 */
 	ArrayList<Event> kopiaEventow;
 	
 	/**
@@ -66,19 +85,13 @@ public class EventContainer implements ObjectContainer, Tickable {
 	public EventContainer(Window mainWin){
 		this();
 		window = mainWin;
-		SerializeXstream("XXML.xml");
-		SerializeXmlJava("XML.xml");
-		DeserializeXmlJava("XML.xml");
-		DeserializeXstream("XXML.xml");
+		
 		try {
 			add(new Event("Hue", "11/11/2011"));
 		} catch (DateFormatException e) {
 			e.printStackTrace();
 		}
-		SerializeSqlServer("componentProject");
-		DeserializeSqlServer("componentProject");
-		SerializeSqlite("test.db");
-		DeserializeSqlite("test.db");
+
 		window.updateEventList();
 	}
 	
@@ -255,7 +268,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 	}
 	
 	/**
-	 * 
+	 * Wykonuje zaawansowan¹ operacjê toString.
 	 * @return Tablica stringów u¿ywana do ustawiania zawartoœci JList.
 	 */
 	public String[] ToStringArray(){
@@ -270,8 +283,8 @@ public class EventContainer implements ObjectContainer, Tickable {
 	
 	/**
 	 * 
-	 * @param date Data, wed³ug której jest s¹ filtrowane obiekty
-	 * @param greater Czy filtrowane obiekty maj¹ mieæ daty wiêksze, czy mniejsze od podanej daty.
+	 * @param date1 Minimalna granica filtrowanych zdarzeñ
+	 * @param date2 Maksymalna granica filtrowanych zdarzeñ
 	 */
 	public void dateFilter(java.util.Date date1, java.util.Date date2){
 		if(!isFiltered){
@@ -297,7 +310,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 	
 	/**
 	 * sprawdza, czy kontener jest po filtrowaniu.
-	 * @return
+	 * @return True - kontener jest po filtorowaniu. False - kontener jest w stanie standardowym.
 	 */
 	public boolean getFiltered(){
 		return isFiltered;
@@ -305,7 +318,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 	
 	/**
 	 * Usuwa wszystkie obiekty przed podan¹ dat¹.
-	 * @param date
+	 * @param date Data, przed któr¹ zostan¹ skasowane zdarzenia.
 	 */
 	public void deleteBefore(java.util.Date date){
 		ArrayList<Event> toDelete = new ArrayList<Event>();
@@ -356,21 +369,16 @@ public class EventContainer implements ObjectContainer, Tickable {
 	/**
 	 * Deserializuje wszystkie obiekty z pliku XML za pomoc¹ biblioteki Xstream
 	 * @param loadLocation nazwa pliku odczytu.
+	 * @throws IOException Plik nie odnaleziony.
 	 */
-	public void DeserializeXstream(String loadLocation){
+	public void DeserializeXstream(String loadLocation) throws IOException{
 		File file = new File(loadLocation);
 		byte[] bytes = new byte[(int) file.length()];
-		try {
-			FileInputStream fis = new FileInputStream(file);
-			fis.read(bytes);
-			String str = new String(bytes);
-			//System.out.println(str);
-			eventy = (ArrayList<Event>)xstream.fromXML(str);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		FileInputStream fis = new FileInputStream(file);
+		fis.read(bytes);
+		String str = new String(bytes);
+		//System.out.println(str);
+		eventy = (ArrayList<Event>)xstream.fromXML(str);
 		window.updateEventList();
 	}
 	
@@ -396,22 +404,17 @@ public class EventContainer implements ObjectContainer, Tickable {
 	/**
 	 * Deserializuje wszystkie obiekty z pliku XML za pomoc¹ standardowej biblioteki Javy
 	 * @param loadLocation nazwa pliku odczytu.
+	 * @throws FileNotFoundException Plik nie odnaleziony.
 	 */
-	public void DeserializeXmlJava(String loadLocation){
+	public void DeserializeXmlJava(String loadLocation) throws FileNotFoundException{
 		
 		XMLDecoder decoder;
-		try {
-			decoder = new XMLDecoder(new BufferedInputStream(
-                new FileInputStream(loadLocation)));
-			
-			ArrayList<Event> readObject = (ArrayList<Event>)decoder.readObject();
-			eventy = readObject;
-	        decoder.close();
-	        
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		decoder = new XMLDecoder(new BufferedInputStream(
+            new FileInputStream(loadLocation)));
+		
+		ArrayList<Event> readObject = (ArrayList<Event>)decoder.readObject();
+		eventy = readObject;
+        decoder.close();
         window.updateEventList();
 	}
 	
@@ -438,36 +441,32 @@ public class EventContainer implements ObjectContainer, Tickable {
 	/**
 	 * Deserializuje wszystkie obiekty z bazy danych SQL Server.
 	 * @param loadLocation nazwa bazy danych do odczytu.
+	 * @throws DateFormatException Mo¿liwe podanie daty w nieprawid³owym formacie do konstruktora zdarzenia.
+	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
 	 */
-	public void DeserializeSqlServer(String loadLocation){
+	public void DeserializeSqlServer(String loadLocation) throws SQLException, DateFormatException{
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
         ResultSet rs = db.executeWithResult("use componentProject; select nazwa,data, description, place, reminder from events");
-        try{
-        	ArrayList<Event> nowe = new ArrayList<Event>();
-        	while (rs.next()) {
-        	  Event ev = new Event(rs.getString("nazwa"), rs.getString("data"));
-        	  ev.setDescription(rs.getString("description"));
-        	  ev.setPlace(rs.getString("place"));
-        	  ev.setReminder(rs.getInt("reminder"));
-        	  nowe.add(ev);
-        	  System.out.println(ev);
-        	}
-        	eventy = nowe;
-        }
-        catch(SQLException s){
-        	s.printStackTrace();
-        } catch (DateFormatException e) {
-			e.printStackTrace();
-		}
+    	ArrayList<Event> nowe = new ArrayList<Event>();
+    	while (rs.next()) {
+    	  Event ev = new Event(rs.getString("nazwa"), rs.getString("data"));
+    	  ev.setDescription(rs.getString("description"));
+    	  ev.setPlace(rs.getString("place"));
+    	  ev.setReminder(rs.getInt("reminder"));
+    	  nowe.add(ev);
+    	  System.out.println(ev);
+    	}
+    	eventy = nowe;
         window.updateEventList();
 	}
 	
 	/**
 	 * Serializuje wszystkie obiekty do bazy danych Sqlite.
 	 * @param saveLocation nazwa pliku bazy danych.
+	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
 	 */
-	public void SerializeSqlite(String saveLocation){
+	public void SerializeSqlite(String saveLocation) throws SQLException{
 		SqliteDatabase db= new SqliteDatabase();
 		db.dbConnect(saveLocation);
         db.execute("drop table if exists events; create table events(id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), description VARCHAR(300), place VARCHAR(100), reminder INTEGER, primary key (id))");
@@ -483,31 +482,30 @@ public class EventContainer implements ObjectContainer, Tickable {
 	/**
 	 * Deserializuje wszystkie obiekty z bazy danych Sqlite
 	 * @param loadLocation nazwa pliku bazy danych.
+	 * @throws DateFormatException Mo¿liwe podanie daty w nieprawid³owym formacie do konstruktora zdarzenia.
+	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
 	 */
-	public void DeserializeSqlite(String loadLocation){
+	public void DeserializeSqlite(String loadLocation) throws SQLException, DateFormatException{
 		SqliteDatabase db= new SqliteDatabase();
 		db.dbConnect(loadLocation);
 		ResultSet rs = db.executeWithResult("select nazwa,data, description, place, reminder from events");
-        try{
-        	ArrayList<Event> nowe = new ArrayList<Event>();
-        	while (rs.next()) {
-        	  Event ev = new Event(rs.getString("nazwa"), rs.getString("data"));
-        	  ev.setDescription(rs.getString("description"));
-        	  ev.setPlace(rs.getString("place"));
-        	  ev.setReminder(rs.getInt("reminder"));
-        	  nowe.add(ev);
-        	  System.out.println(ev);
-        	}
-        	eventy = nowe;
-        }
-        catch(SQLException s){
-        	s.printStackTrace();
-        } catch (DateFormatException e) {
-			e.printStackTrace();
-		}
+    	ArrayList<Event> nowe = new ArrayList<Event>();
+    	while (rs.next()) {
+    	  Event ev = new Event(rs.getString("nazwa"), rs.getString("data"));
+    	  ev.setDescription(rs.getString("description"));
+    	  ev.setPlace(rs.getString("place"));
+    	  ev.setReminder(rs.getInt("reminder"));
+    	  nowe.add(ev);
+    	  System.out.println(ev);
+    	}
+    	eventy = nowe;
         window.updateEventList();
 	}
 	
+	/**
+	 * Eksportuje zdarzenia do formatu iCalendar.
+	 * @param saveLocation Nazwa pliku zapisu.
+	 */
 	public void SaveToICal(String saveLocation){
 		FileOutputStream fout = null;
 		try {

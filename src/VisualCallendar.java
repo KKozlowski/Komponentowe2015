@@ -26,7 +26,7 @@ import java.awt.Font;
  */
 public class VisualCallendar extends JFrame {
 	
-	String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+	String[] months =  {"Styczeñ", "Luty", "Marzec", "Kwiecieñ", "Maj", "Czerwiec", "Lipiec", "Sierpieñ", "Wrzesieñ", "PaŸdziernik", "Listopad", "Grudzieñ"};
 	private DateReceiver ea;
 	
 	private JPanel contentPane;
@@ -61,7 +61,7 @@ public class VisualCallendar extends JFrame {
 		monthLabel = new JLabel("Month");
 		monthLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		monthLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		monthLabel.setBounds(142, 28, 177, 47);
+		monthLabel.setBounds(124, 28, 210, 47);
 		contentPane.add(monthLabel);
 		
 		JButton prevButton = new JButton("<");

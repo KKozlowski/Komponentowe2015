@@ -15,9 +15,16 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	private Date data = new Date();
 	private String description;
 	private String place;
+	
+	/**
+	 * Czas w minutach, przed którym nale¿y przypomnieæ o zdarzeniu.
+	 */
 	private int reminderTime;
 	private Comparator<Event> comparator;
 	
+	/**
+	 * Czy o zdarzeniu ju¿ przypomniano.
+	 */
 	public boolean remindedAbout = false;
 	
 	/**
@@ -93,8 +100,8 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	 /**
 	  * Metoda s³u¿¹ca do wczytywania pól obiektu ze strumienia.
 	  * @param o Strumieñ odczytu.
-	  * @throws IOException
-	  * @throws ClassNotFoundException
+	  * @throws IOException B³¹d odczytu danych
+	  * @throws ClassNotFoundException Brak klasy odpowiadaj¹cej informacjom ze strumienia.
 	  */
 	 private void readObject(ObjectInputStream o)
 	    throws IOException, ClassNotFoundException {  
@@ -175,7 +182,8 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	}
 	
 	/**
-	 * Ustawia datê w formacie "dd/MM/yyyy"
+	 * Ustawia datê zdarzenia.
+	 * @param dat Data w formacie "dd/MM/yyyy"
 	 */
 	public void setDate (String dat) throws DateFormatException{
 	    Date d; 
@@ -187,7 +195,9 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	}
 	
 	/**
-	 * Ustawia datê w formacie "dd/MM/yyyy HH:mm"
+	 * Ustawia datê zdarzenia.
+	 * @param dat Data w formacie "dd/MM/yyyy HH:mm"
+	 * @throws DateFormatException Podana data mo¿e mieæ b³êdny format.
 	 */
 	public void setDateHour(String dat) throws DateFormatException{
 	    Date d; 

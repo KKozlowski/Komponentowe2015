@@ -60,6 +60,7 @@ public class EventAdder extends JFrame implements DateReceiver {
 	 * @param addingOnly Czy okno bêdzie dodawa³o nowe zdarzenie (true), czy edytowa³o ju¿ istniej¹ce (false)
 	 */
 	public EventAdder(EventContainer ev, boolean addingOnly) {
+		setTitle("Edytor zdarze\u0144");
 		events = ev;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);

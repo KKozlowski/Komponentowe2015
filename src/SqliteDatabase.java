@@ -39,7 +39,7 @@ public class SqliteDatabase {
 		}
     }
     
-    public void execute(String query){
+    public void execute(String query) throws SQLException{
     	Statement stmt = null;
     	try {
     		stmt = connection.createStatement();
@@ -48,10 +48,6 @@ public class SqliteDatabase {
 			e.printStackTrace();
 		}
     	
-    	try {
-			stmt.executeUpdate(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		stmt.executeUpdate(query);
     }
 }
