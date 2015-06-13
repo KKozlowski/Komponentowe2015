@@ -104,16 +104,18 @@ public class SaveLoadWindow extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			events.window.defilter();
 			String name = fileName.getText();
-			XstreamSerial XstreamSerial = new XstreamSerial();
+			CollectionSerializator cs;
 			try{
 				if(isToSave)
 					switch (comboBox.getSelectedIndex()){
 					case 0:
-						events.SerializeXmlJava(name);
+						//events.SerializeXmlJava(name);
+						cs = new XmlJavaSerial();
+						cs.serialize(name, events);
 						break;
 					case 1:
-						//events.SerializeXstream(name);
-						XstreamSerial.SerializeXstream(name, events);
+						cs = new XstreamSerial();
+						cs.serialize(name, events);
 						break;
 					case 2:
 						events.SerializeSqlServer(name);
@@ -128,12 +130,17 @@ public class SaveLoadWindow extends JFrame {
 				else
 					switch (comboBox.getSelectedIndex()){
 					case 0:
-						events.DeserializeXmlJava(name);
+						//events.DeserializeXmlJava(name);
+						cs = new XmlJavaSerial();
+						ArrayList<Event> ev0 = cs.deserialize(name);
+						events.clear();
+						events.addAll(ev0);
 						break;
 					case 1:
-						ArrayList<Event> ev = XstreamSerial.DeserializeXstream(name);
+						cs = new XstreamSerial();
+						ArrayList<Event> ev1 = cs.deserialize(name);
 						events.clear();
-						events.addAll(ev);
+						events.addAll(ev1);
 						break;
 					case 2:
 						events.DeserializeSqlServer(name);

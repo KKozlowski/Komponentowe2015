@@ -31,12 +31,8 @@ public class XstreamSerial implements CollectionSerializator {
 	 * 
 	 */
 	
-	/**
-	 * Serializuje wszystkie obiekty do pliku XML za pomoc¹ biblioteki Xstream
-	 * @param saveLocation nazwa pliku zapisu.
-	 * @param d Dowolna kolekcja
-	 */
-	public void SerializeXstream(String saveLocation, Collection<?> d){
+	@Override
+	public void serialize(String saveLocation, Collection<?> d){
 		ArrayList arrayList = new ArrayList(Arrays.asList(d.toArray()));
 		String serial = xstream.toXML(arrayList);
 		FileOutputStream fos = null;
@@ -59,13 +55,8 @@ public class XstreamSerial implements CollectionSerializator {
 		}
 	}
 	
-	/**
-	 * Deserializuje wszystkie obiekty z pliku XML za pomoc¹ biblioteki Xstream
-	 * @param loadLocation nazwa pliku odczytu.
-	 * @return Kolekcja zawieraj¹ca zdeserializowane obiekty.
-	 * @throws IOException Plik nie odnaleziony
-	 */
-	public <T> ArrayList<T> DeserializeXstream(String loadLocation) throws IOException{
+	@Override
+	public <T> ArrayList<T> deserialize(String loadLocation) throws IOException{
 		File file = new File(loadLocation);
 		byte[] bytes = new byte[(int) file.length()];
 		FileInputStream fis = new FileInputStream(file);

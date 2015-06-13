@@ -146,6 +146,7 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 	 */
 	@Override
 	public boolean add(Event arg0) {
+		if(isFiltered) return false;
 		eventy.add(arg0);
 		if (window!=null) window.updateEventList();
 		return true;
@@ -158,6 +159,9 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 	 */
 	@Override
 	public boolean remove(Object arg0) {
+		if(isFiltered){
+			kopiaEventow.remove(arg0);
+		}
 		return eventy.remove(arg0);
 	}
 	
@@ -297,42 +301,6 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 		boolean powodzenie = eventy.addAll(arg0);
 		if(window != null) window.updateEventList();
 		return powodzenie;
-	}
-	
-	/**
-	 * Serializuje wszystkie obiekty do pliku XML za pomoc¹ standardowej biblioteki Javy
-	 * @param saveLocation nazwa pliku zapisu.
-	 */
-	public void SerializeXmlJava(String saveLocation){
-		XMLEncoder encoder;
-		try {
-			encoder = new XMLEncoder(
-			      new BufferedOutputStream(
-			        new FileOutputStream(saveLocation)));
-			encoder.writeObject(eventy);
-	        encoder.close();
-	        
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Deserializuje wszystkie obiekty z pliku XML za pomoc¹ standardowej biblioteki Javy
-	 * @param loadLocation nazwa pliku odczytu.
-	 * @throws FileNotFoundException Plik nie odnaleziony.
-	 */
-	public void DeserializeXmlJava(String loadLocation) throws IOException{
-		
-		XMLDecoder decoder;
-		decoder = new XMLDecoder(new BufferedInputStream(
-            new FileInputStream(loadLocation)));
-		
-		ArrayList<Event> readObject = (ArrayList<Event>)decoder.readObject();
-		eventy = readObject;
-        decoder.close();
-        window.updateEventList();
 	}
 	
 	/**
