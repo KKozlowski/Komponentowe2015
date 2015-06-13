@@ -105,11 +105,12 @@ public class SaveLoadWindow extends JFrame {
 			events.window.defilter();
 			String name = fileName.getText();
 			CollectionSerializator cs;
+			SqlServerSerial sss;
+			SqliteSerial sls;
 			try{
 				if(isToSave)
 					switch (comboBox.getSelectedIndex()){
 					case 0:
-						//events.SerializeXmlJava(name);
 						cs = new XmlJavaSerial();
 						cs.serialize(name, events);
 						break;
@@ -118,13 +119,15 @@ public class SaveLoadWindow extends JFrame {
 						cs.serialize(name, events);
 						break;
 					case 2:
-						events.SerializeSqlServer(name);
+						sss = new SqlServerSerial();
+						sss.serialize(name, events);
 						break;
 					case 3:
-						events.SerializeSqlite(name);
+						//events.SerializeSqlite(name);
+						sls = new SqliteSerial();
+						sls.serialize(name, events);
 						break;
 					case 4:
-						//events.SaveToICal(name);
 						ICalSaver ics = new ICalSaver();
 						ics.serialize(name, events);
 						break;
@@ -132,7 +135,6 @@ public class SaveLoadWindow extends JFrame {
 				else
 					switch (comboBox.getSelectedIndex()){
 					case 0:
-						//events.DeserializeXmlJava(name);
 						cs = new XmlJavaSerial();
 						ArrayList<Event> ev0 = cs.deserialize(name);
 						events.clear();
@@ -145,10 +147,17 @@ public class SaveLoadWindow extends JFrame {
 						events.addAll(ev1);
 						break;
 					case 2:
-						events.DeserializeSqlServer(name);
+						sss = new SqlServerSerial();
+						ArrayList<Event> ev2 = sss.deserialize(name);
+						events.clear();
+						events.addAll(ev2);
 						break;
 					case 3:
-						events.DeserializeSqlite(name);
+						sls = new SqliteSerial();
+						ArrayList<Event> ev3 = sls.deserialize(name);
+						events.clear();
+						events.addAll(ev3);
+						break;
 					}
 			}
 			catch(Exception ex){

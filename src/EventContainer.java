@@ -281,8 +281,6 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 		window = win;
 	}
 	
-	
-	
 	@Override
 	public Object[] toArray() {
 		return eventy.toArray();
@@ -302,90 +300,6 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 		boolean powodzenie = eventy.addAll(arg0);
 		if(window != null) window.updateEventList();
 		return powodzenie;
-	}
-	
-	/**
-	 * Serializuje wszystkie obiekty do bazy danych SQL Server.
-	 * @param saveLocation nazwa bazy danych.
-	 */
-	public void SerializeSqlServer(String saveLocation){
-		SqlServerDatabase db = new SqlServerDatabase();
-        db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
-        //db.executeWithResult("use HR; select last_name from employees; drop database huhue;");
-        db.execute("USE [master]");
-        db.execute("IF OBJECT_ID('componentProject') = NULL create database componentProject; ");
-        db.execute("use componentProject; IF OBJECT_ID('dbo.events', 'U') IS NOT NULL drop table events; create table events (id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), description VARCHAR(300), place VARCHAR(100), reminder INTEGER, primary key (id));");
-        StringBuilder finalUpdate = new StringBuilder();
-        for(Event e : eventy){
-        	finalUpdate.append("insert into events(nazwa,data, description, place, reminder) values ('"+e.getName()+"', '"
-        			+ e.getDateHour() +"', '"+ e.getDescription() +"', '"+ e.getPlace() +"', '"+ e.getReminder() + "'); ");
-        }
-        
-        db.execute(finalUpdate.toString());
-	}
-	
-	/**
-	 * Deserializuje wszystkie obiekty z bazy danych SQL Server.
-	 * @param loadLocation nazwa bazy danych do odczytu.
-	 * @throws DateFormatException Mo¿liwe podanie daty w nieprawid³owym formacie do konstruktora zdarzenia.
-	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
-	 */
-	public void DeserializeSqlServer(String loadLocation) throws SQLException, DateFormatException{
-		SqlServerDatabase db = new SqlServerDatabase();
-        db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
-        ResultSet rs = db.executeWithResult("use componentProject; select nazwa,data, description, place, reminder from events");
-    	ArrayList<Event> nowe = new ArrayList<Event>();
-    	while (rs.next()) {
-    	  Event ev = new Event(rs.getString("nazwa"), rs.getString("data"));
-    	  ev.setDescription(rs.getString("description"));
-    	  ev.setPlace(rs.getString("place"));
-    	  ev.setReminder(rs.getInt("reminder"));
-    	  nowe.add(ev);
-    	  System.out.println(ev);
-    	}
-    	eventy = nowe;
-    	if (window!=null) window.updateEventList();
-	}
-	
-	/**
-	 * Serializuje wszystkie obiekty do bazy danych Sqlite.
-	 * @param saveLocation nazwa pliku bazy danych.
-	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
-	 */
-	public void SerializeSqlite(String saveLocation) throws SQLException{
-		SqliteDatabase db= new SqliteDatabase();
-		db.dbConnect(saveLocation);
-        db.execute("drop table if exists events; create table events(id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), description VARCHAR(300), place VARCHAR(100), reminder INTEGER, primary key (id))");
-        StringBuilder finalUpdate = new StringBuilder();
-        for(Event e : eventy){
-        	finalUpdate.append("insert into events(nazwa,data, description, place, reminder) values ('"+e.getName()+"', '"
-        			+ e.getDateHour() +"', '"+ e.getDescription() +"', '"+ e.getPlace() +"', '"+ e.getReminder() + "'); ");
-        }
-        db.execute(finalUpdate.toString());
-	}
-	
-	
-	/**
-	 * Deserializuje wszystkie obiekty z bazy danych Sqlite
-	 * @param loadLocation nazwa pliku bazy danych.
-	 * @throws DateFormatException Mo¿liwe podanie daty w nieprawid³owym formacie do konstruktora zdarzenia.
-	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
-	 */
-	public void DeserializeSqlite(String loadLocation) throws SQLException, DateFormatException{
-		SqliteDatabase db= new SqliteDatabase();
-		db.dbConnect(loadLocation);
-		ResultSet rs = db.executeWithResult("select nazwa,data, description, place, reminder from events");
-    	ArrayList<Event> nowe = new ArrayList<Event>();
-    	while (rs.next()) {
-    	  Event ev = new Event(rs.getString("nazwa"), rs.getString("data"));
-    	  ev.setDescription(rs.getString("description"));
-    	  ev.setPlace(rs.getString("place"));
-    	  ev.setReminder(rs.getInt("reminder"));
-    	  nowe.add(ev);
-    	  System.out.println(ev);
-    	}
-    	eventy = nowe;
-    	if (window!=null) window.updateEventList();
 	}
 	
 	@Override
