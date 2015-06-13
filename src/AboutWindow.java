@@ -43,7 +43,7 @@ public class AboutWindow extends JFrame {
 		opisProgramu.setBounds(10, 63, 254, 41);
 		contentPane.add(opisProgramu);
 		
-		JLabel autorProgramu = new JLabel("by Kamil Koz\u0142owski", SwingConstants.CENTER);
+		JLabel autorProgramu = new JLabel("by Kamil Koz\u0142owski & Piotr Komorowski", SwingConstants.CENTER);
 		autorProgramu.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		autorProgramu.setBounds(10, 109, 254, 41);
 		contentPane.add(autorProgramu);

@@ -332,7 +332,7 @@ public class Window extends JFrame   {
 		
 		@Override
 		public void sendDate(int day, int month, int year) {
-			GregorianCalendar cal1 = new GregorianCalendar(year,month-1,day,0,1);
+			GregorianCalendar cal1 = new GregorianCalendar(year,month-1,day,0,0);
 			GregorianCalendar cal2 = new GregorianCalendar(year,month-1,day,23,59);
 			events.dateFilter(cal1.getTime(), cal2.getTime());
 			updateEventList();

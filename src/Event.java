@@ -83,6 +83,13 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		setDescription(description);
 	}
 	
+	public Event (String name, Date dataa, String description) throws DateFormatException{
+		this();
+		setName(name);
+		setDate(dataa);
+		setDescription(description);
+	}
+	
 	/**
 	 * Podstawowa metoda s³u¿¹ca do serializacji pól obiektu.
 	 * @param o strumieñ do którego s¹ zapisywane dane.
@@ -192,6 +199,14 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	    } catch ( ParseException pe){
 	    	throw new DateFormatException();
 	    }
+	}
+	
+	/**
+	 * Ustawia datê zdarzenia.
+	 * @param dat Data jako obiekty klasy Date.
+	 */
+	public void setDate (Date dat){
+	    this.data = dat;
 	}
 	
 	/**

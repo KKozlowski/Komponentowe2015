@@ -139,99 +139,6 @@ public class EventContainer implements ObjectContainer, Tickable {
 		return eventy.size();
 	}
 	
-	/*public void saveToBin(){
-		try {
-			DataOutputStream eventStream = 		// Strumien zapisujacy liczby
-				new DataOutputStream(new FileOutputStream("data/events.bin")); 
-			
-			eventStream.writeInt(getSize());
-			for (int i=0; i< getSize(); i++){
-				//strumienTablicy.writeChars(eventy.get(i).getName());
-				eventStream.writeUTF(eventy.get(i).getName());
-				eventStream.writeLong(eventy.get(i).getMiliseconds());
-				
-			}
-			eventStream.close();
-			
-			
-		}
-		catch (IOException io)												
-			{System.out.println(io.getMessage());}
-
-		catch (Exception se)
-			{System.err.println("blad sec");}
-		
-	}
-	
-	public void loadFromBin(){
-		try {
-			DataInputStream eventStream = 
-				new DataInputStream(new FileInputStream("data/events.bin"));
-			
-			int rozmiar = eventStream.readInt();
-			eventy.clear();
-			for(int i=0; i<rozmiar; i++){
-				eventy.add(new Event(eventStream.readUTF(), eventStream.readLong()));
-			}
-			eventStream.close();
-		}
-		catch (FileNotFoundException io)												
-			{System.out.println(io.getMessage());}
-	
-		catch (IOException io)												
-			{System.out.println(io.getMessage());} 
-		sort();
-	}
-	
-	public void saveObjects(){
-		try {
-			//Zapisywanie ca³ych obiektów do pliku.
-			FileOutputStream fileOut = new FileOutputStream("data/objects.bin");
-			
-			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			
-			out.writeInt(getSize());
-			
-			for(int i=0; i<getSize();i++){
-				out.writeObject(eventy.get(i));
-			}
-			
-			out.close();
-			fileOut.close();
-			
-		}
-		catch (Exception e)
-		{System.out.println("Nie udalo sie zapisac do pliku");}
-	}
-	
-	public void loadObjects(){
-		FileInputStream fileIn;
-		try {
-			fileIn = new FileInputStream("data/objects.bin");
-		} catch (FileNotFoundException e) {
-			System.out.println("Nie odnaleziono pliku z danymi.");
-			return;
-		}
-		try {
-			ObjectInputStream in = new ObjectInputStream(fileIn);
-			
-			int rozmiar = in.readInt();
-			eventy.clear();
-
-			for(int i=0; i<rozmiar;i++){
-				try {
-					Event obj = (Event)in.readObject();
-					eventy.add(obj);
-				} catch (ClassNotFoundException e) {
-					System.out.println("Nie odnaleziono klasy");
-					return;
-				}
-			}
-		} catch (IOException e) {
-			System.out.println("Wystapil blad podczas wczytywania danych");
-		}
-	}*/
-	
 	/**
 	 * Dodaje nowy obiekt typu Event do listy.
 	 */
@@ -293,7 +200,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 			kopiaEventow = eventy;
 			eventy = new ArrayList<Event>();
 			for(Event e : kopiaEventow){
-				if (e.getDate().compareTo(date1) == 1
+				if (e.getDate().compareTo(date1) >=0
 						&& e.getDate().compareTo(date2) == -1)
 				eventy.add(e);
 			}
