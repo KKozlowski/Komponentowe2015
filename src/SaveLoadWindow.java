@@ -9,7 +9,10 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.AbstractAction;
+
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+
 import javax.swing.Action;
 
 /**
@@ -101,6 +104,7 @@ public class SaveLoadWindow extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			events.window.defilter();
 			String name = fileName.getText();
+			XstreamSerial XstreamSerial = new XstreamSerial();
 			try{
 				if(isToSave)
 					switch (comboBox.getSelectedIndex()){
@@ -108,7 +112,8 @@ public class SaveLoadWindow extends JFrame {
 						events.SerializeXmlJava(name);
 						break;
 					case 1:
-						events.SerializeXstream(name);
+						//events.SerializeXstream(name);
+						XstreamSerial.SerializeXstream(name, events);
 						break;
 					case 2:
 						events.SerializeSqlServer(name);
@@ -126,7 +131,9 @@ public class SaveLoadWindow extends JFrame {
 						events.DeserializeXmlJava(name);
 						break;
 					case 1:
-						events.DeserializeXstream(name);
+						ArrayList<Event> ev = XstreamSerial.DeserializeXstream(name);
+						events.clear();
+						events.addAll(ev);
 						break;
 					case 2:
 						events.DeserializeSqlServer(name);

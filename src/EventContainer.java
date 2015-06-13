@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.io.*;
 import java.net.SocketException;
@@ -25,14 +26,14 @@ import com.thoughtworks.xstream.XStream;
 /**
  * Klasa s³u¿¹ca do wykonywania podtawowych operacji na danych oraz serializowania ich.
  */
-public class EventContainer implements ObjectContainer, Tickable {
+public class EventContainer extends CollectionAdapter<Event> implements ObjectContainer, Tickable, DateFilterable {
 	/**
 	 * Lista zdarzeñ
 	 */
 	ArrayList<Event> eventy = new ArrayList<Event>();
 	
 	/**
-	 * Okno powi¹zane z logik¹.
+	 * Okno powi¹zane z logik¹. Opcjonalne, s³u¿y do odœwie¿ania listy eventów w oknie.
 	 */
 	Window window;
 	
@@ -92,7 +93,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 			e.printStackTrace();
 		}
 
-		window.updateEventList();
+		if (window!=null) window.updateEventList();
 	}
 	
 	public void printList(ArrayList<Event> eventy){
@@ -135,20 +136,29 @@ public class EventContainer implements ObjectContainer, Tickable {
 		}
 	}*/
 	
-	public int getSize(){
+	@Override
+	public int size() {
 		return eventy.size();
 	}
-	
+
 	/**
 	 * Dodaje nowy obiekt typu Event do listy.
 	 */
 	@Override
-	public void add(Object added) {
-		if((Event)added != null){
-			eventy.add((Event) added);
-			sort();
-			if (window!=null) window.updateEventList();
-		}
+	public boolean add(Event arg0) {
+		eventy.add(arg0);
+		if (window!=null) window.updateEventList();
+		return true;
+	}
+	
+	/**
+	 * Usuwa obiekt z kontenera.
+	 * @param arg0 Obiekt klasy Event.
+	 * @return Czy operacja siê powiod³a.
+	 */
+	@Override
+	public boolean remove(Object arg0) {
+		return eventy.remove(arg0);
 	}
 	
 	/**
@@ -216,6 +226,25 @@ public class EventContainer implements ObjectContainer, Tickable {
 	}
 	
 	/**
+	 * Sprawdza, czy kontener zawiera dany obiekt.
+	 * @param arg0 Szukany obiekt.
+	 * @return czy kontener zawiera szukany obiekt.
+	 */
+	@Override
+	public boolean contains(Object arg0) {
+		return eventy.contains(arg0);
+	}
+	
+	/**
+	 * 
+	 * @return Czy kontener jest pusty.
+	 */
+	@Override
+	public boolean isEmpty() {
+		return eventy.isEmpty();
+	}
+	
+	/**
 	 * sprawdza, czy kontener jest po filtrowaniu.
 	 * @return True - kontener jest po filtorowaniu. False - kontener jest w stanie standardowym.
 	 */
@@ -236,7 +265,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 		for(Event e: toDelete){
 			eventy.remove(e);
 		}
-		window.updateEventList();
+		if (window!=null) window.updateEventList();
 	}
 	
 	/**
@@ -247,46 +276,27 @@ public class EventContainer implements ObjectContainer, Tickable {
 		window = win;
 	}
 	
-	/**
-	 * Serializuje wszystkie obiekty do pliku XML za pomoc¹ biblioteki Xstream
-	 * @param saveLocation nazwa pliku zapisu.
-	 */
-	public void SerializeXstream(String saveLocation){
-		String serial = xstream.toXML(eventy);
-		FileOutputStream fos = null;
-		try {
-		    fos = new FileOutputStream(saveLocation);
-		    fos.write("<?xml version=\"1.0\"?>".getBytes("UTF-8")); 
-		    byte[] bytes = serial.getBytes("UTF-8");
-		    fos.write(bytes);
-
-		} catch(Exception e) {
-		    e.printStackTrace(); 
-		} finally {
-		    if(fos!=null) {
-		        try{ 
-		            fos.close();
-		        } catch (IOException e) {
-		            e.printStackTrace(); 
-		        }
-		    }
-		}
+	
+	
+	@Override
+	public Object[] toArray() {
+		return eventy.toArray();
 	}
 	
+	
 	/**
-	 * Deserializuje wszystkie obiekty z pliku XML za pomoc¹ biblioteki Xstream
-	 * @param loadLocation nazwa pliku odczytu.
-	 * @throws IOException Plik nie odnaleziony.
+	 * Usuwa wszystkie elementy kontenera.
 	 */
-	public void DeserializeXstream(String loadLocation) throws IOException{
-		File file = new File(loadLocation);
-		byte[] bytes = new byte[(int) file.length()];
-		FileInputStream fis = new FileInputStream(file);
-		fis.read(bytes);
-		String str = new String(bytes);
-		//System.out.println(str);
-		eventy = (ArrayList<Event>)xstream.fromXML(str);
-		window.updateEventList();
+	@Override
+	public void clear() {
+		eventy = new ArrayList<Event>();
+	}
+	
+	@Override
+	public boolean addAll(Collection<? extends Event> arg0) {
+		boolean powodzenie = eventy.addAll(arg0);
+		if(window != null) window.updateEventList();
+		return powodzenie;
 	}
 	
 	/**
@@ -313,7 +323,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 	 * @param loadLocation nazwa pliku odczytu.
 	 * @throws FileNotFoundException Plik nie odnaleziony.
 	 */
-	public void DeserializeXmlJava(String loadLocation) throws FileNotFoundException{
+	public void DeserializeXmlJava(String loadLocation) throws IOException{
 		
 		XMLDecoder decoder;
 		decoder = new XMLDecoder(new BufferedInputStream(
@@ -365,7 +375,7 @@ public class EventContainer implements ObjectContainer, Tickable {
     	  System.out.println(ev);
     	}
     	eventy = nowe;
-        window.updateEventList();
+    	if (window!=null) window.updateEventList();
 	}
 	
 	/**
@@ -406,7 +416,7 @@ public class EventContainer implements ObjectContainer, Tickable {
     	  System.out.println(ev);
     	}
     	eventy = nowe;
-        window.updateEventList();
+    	if (window!=null) window.updateEventList();
 	}
 	
 	/**
@@ -463,7 +473,7 @@ public class EventContainer implements ObjectContainer, Tickable {
 			long eventTime = e.getMiliseconds()/1000/60;
 			int diff = (int) (eventTime-currentTime);
 			if (e.remindedAbout == false && diff>0 && diff < e.getReminder()){
-				window.remindEventMessage(e, diff);
+				if (window!=null) window.remindEventMessage(e, diff);
 				e.remindedAbout = true;
 			}
 		}	
