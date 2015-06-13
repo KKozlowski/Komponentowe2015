@@ -124,7 +124,9 @@ public class SaveLoadWindow extends JFrame {
 						events.SerializeSqlite(name);
 						break;
 					case 4:
-						events.SaveToICal(name);
+						//events.SaveToICal(name);
+						ICalSaver ics = new ICalSaver();
+						ics.serialize(name, events);
 						break;
 					}
 				else
