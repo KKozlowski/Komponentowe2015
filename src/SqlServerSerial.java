@@ -4,14 +4,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
+/**
+ * Wykonuje operacje serializacji i deserializacji do bazy danych SQL Server.
+ */
 class SqlServerSerial {
 	/**
 	 * Serializuje wszystkie obiekty do bazy danych SQL Server.
 	 * @param saveLocation nazwa bazy danych.
 	 * @param d Kolekcja Eventów
 	 */
-	void serialize(String saveLocation, Collection<Event> d){
+	public void serialize(String saveLocation, Collection<Event> d){
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
         //db.executeWithResult("use HR; select last_name from employees; drop database huhue;");
@@ -32,8 +34,9 @@ class SqlServerSerial {
 	 * @param loadLocation nazwa nazwa bazy danych.
 	 * @throws DateFormatException Mo¿liwe podanie daty w nieprawid³owym formacie do konstruktora zdarzenia.
 	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
+	 * @return ArrayList zawieraj¹ca wszystkie elementy zdeserializowanej kolekcji.
 	 */
-	ArrayList<Event> deserialize(String loadLocation) throws SQLException, DateFormatException{
+	public ArrayList<Event> deserialize(String loadLocation) throws SQLException, DateFormatException{
 		SqlServerDatabase db = new SqlServerDatabase();
         db.dbConnect("jdbc:jtds:sqlserver://localhost:1433/master;","sa","wowowo");
         ResultSet rs = db.executeWithResult("use componentProject; select nazwa,data, description, place, reminder from events");

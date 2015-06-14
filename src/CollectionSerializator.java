@@ -14,6 +14,8 @@ public interface CollectionSerializator {
 	/**
 	 * Deserializuje wszystkie obiekty z pliku.
 	 * @param loadLocation nazwa pliku odczytu.
+	 * @param <T> klasa obiektów, które zawiera kolekcja.
+	 * @return ArrayLista zawieraj¹ca wszystkie elementy zdeserializowanego obiektu.
 	 * @throws IOException Plik nie odnaleziony.
 	 */
 	<T> ArrayList<T> deserialize(String loadLocation) throws IOException;

@@ -11,7 +11,9 @@ import java.util.Collection;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
-
+/**
+ * Wykonuje operacje serializacji i deserializacji do pliku Xml za pomoc¹ podstawowej biblioteki XML Javy.
+ */
 public class XmlJavaSerial implements CollectionSerializator {
 	
 	

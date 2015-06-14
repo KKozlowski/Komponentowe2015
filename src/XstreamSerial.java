@@ -9,7 +9,9 @@ import com.thoughtworks.xstream.XStream;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
-
+/**
+ * Wykonuje operacje serializacji i deserializacji do pliku Xml za pomoc¹ biblio
+ */
 public class XstreamSerial implements CollectionSerializator {
 	/**
 	 * Serializuje wszystkie obiekty do pliku XML za pomoc¹ biblioteki Xstream
@@ -19,7 +21,7 @@ public class XstreamSerial implements CollectionSerializator {
 	/**
 	 * Serializator xstream
 	 */
-	XStream xstream;
+	private XStream xstream;
 	
 	public XstreamSerial(){
 		xstream = new XStream();

@@ -25,18 +25,18 @@ import net.fortuna.ical4j.util.UidGenerator;
 import com.thoughtworks.xstream.XStream;
 
 /**
- * Klasa s³u¿¹ca do wykonywania podtawowych operacji na danych oraz serializowania ich.
+ * Klasa s³u¿¹ca do przechowywania zbioru zdarzeñ oraz wykonywania na nim prostych operacji.
  */
 public class EventContainer extends CollectionAdapter<Event> implements CollectionExtender<Event>, Tickable, FilterableByDate {
 	/**
 	 * Lista zdarzeñ
 	 */
-	ArrayList<Event> eventy = new ArrayList<Event>();
+	private ArrayList<Event> eventy = new ArrayList<Event>();
 	
 	/**
-	 * Okno powi¹zane z logik¹. Mo¿e byæ null. Pole wykorzystywane do wywo³ywania odœwie¿ania widoku.
+	 * Okno wyœwietlaj¹ce zawartoœæ kolekcji (mo¿e byæ null). Pole wykorzystywane do wywo³ywania odœwie¿ania widoku.
 	 */
-	EventListWindow window;
+	private EventListWindow window;
 	
 	/**
 	 * Wskazuje, czy kontener jest w trakcie filtrowania.
@@ -46,7 +46,7 @@ public class EventContainer extends CollectionAdapter<Event> implements Collecti
 	/**
 	 * Kopia list zdarzeñ na czas filtrowania.
 	 */
-	ArrayList<Event> kopiaEventow;
+	private ArrayList<Event> kopiaEventow;
 	
 	/**
 	 * Postawowy konstruktor
@@ -78,7 +78,7 @@ public class EventContainer extends CollectionAdapter<Event> implements Collecti
 	 * Konstruktor ustawiaj¹cy pole Window klasy. Pozwala na kontakt warstwy logiki z warstw¹ interfejsu.
 	 * @param mainWin Obiekt g³ównego okna
 	 */
-	public EventContainer(Window mainWin){
+	public EventContainer(EventListWindow mainWin){
 		this();
 		window = mainWin;
 		
@@ -253,7 +253,7 @@ public class EventContainer extends CollectionAdapter<Event> implements Collecti
 	 * Pozwala ustawiæ referencjê do okna ju¿ po stworzeniu obiektu.
 	 * @param win Ustawiane okno.
 	 */
-	public void SetWindow(Window win){
+	public void SetWindow(EventListWindow win){
 		window = win;
 	}
 	

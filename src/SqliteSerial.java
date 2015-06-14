@@ -3,15 +3,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
+/**
+ * Wykonuje operacje serializacji i deserializacji do bazy danych Sqlite.
+ */
 public class SqliteSerial {
 	/**
 	 * Serializuje wszystkie obiekty do bazy danych Sqlite.
 	 * @param saveLocation nazwa bazy danych.
 	 * @param d Kolekcja Eventów
-	 * @throws SQLException 
+	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
 	 */
-	void serialize(String saveLocation, Collection<Event> d) throws SQLException{
+	public void serialize(String saveLocation, Collection<Event> d) throws SQLException{
 		SqliteDatabase db= new SqliteDatabase();
 		db.dbConnect(saveLocation);
         db.execute("drop table if exists events; create table events(id INTEGER IDENTITY (1,1), nazwa VARCHAR(100), data VARCHAR(20), description VARCHAR(300), place VARCHAR(100), reminder INTEGER, primary key (id))");
@@ -28,8 +30,9 @@ public class SqliteSerial {
 	 * @param loadLocation nazwa pliku odczytu.
 	 * @throws DateFormatException Mo¿liwe podanie daty w nieprawid³owym formacie do konstruktora zdarzenia.
 	 * @throws SQLException B³¹d ³¹czenia z baz¹ danych.
+	 * @return ArrayList zawieraj¹ca wszystkie elementy zdeserializowanej kolekcji.
 	 */
-	ArrayList<Event> deserialize(String loadLocation) throws SQLException, DateFormatException{
+	public ArrayList<Event> deserialize(String loadLocation) throws SQLException, DateFormatException{
 		SqliteDatabase db= new SqliteDatabase();
 		db.dbConnect(loadLocation);
 		ResultSet rs = db.executeWithResult("select nazwa,data, description, place, reminder from events");

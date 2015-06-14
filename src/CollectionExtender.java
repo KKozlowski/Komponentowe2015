@@ -10,7 +10,7 @@ public interface CollectionExtender<T> {
 	String[] ToStringArray();
 	
 	/**
-	 * Prosta metoda pobieraj¹ca obiekt o podanym indeksie z kolekcji.
+	 * Prosta metoda zwracaj¹ca obiekt o podanym indeksie w kolekcji.
 	 * @param i numer indeksu na liœcie
 	 * @return Event o indeksie i
 	 */

@@ -62,7 +62,6 @@ public class Event implements Comparable<Event>, Serializable, Individual, Chron
 	 * Konstruktor przyjmuj¹cy nazwê i datê.
 	 * @param name Nazwa zdarzenia.
 	 * @param dataa Data jako obiekt klasy Date
-	 * @throws DateFormatException Mo¿liwoœæ b³êdnego odczytu daty.
 	 */
 	public Event(String name, Date dataa) {
 		this();
@@ -109,7 +108,7 @@ public class Event implements Comparable<Event>, Serializable, Individual, Chron
 	}
 	
 	/**
-	 * Podstawowa metoda s³u¿¹ca do serializacji pól obiektu.
+	 * Podstawowa metoda s³u¿¹ca do serializacji pól obiektu do strumienia.
 	 * @param o strumieñ do którego s¹ zapisywane dane.
 	 * @throws IOException potencjalne b³êdy zapisu obiektów.
 	 */
@@ -206,10 +205,7 @@ public class Event implements Comparable<Event>, Serializable, Individual, Chron
 		return reminderTime;
 	}
 	
-	/**
-	 * Ustawia datê zdarzenia.
-	 * @param dat Data w formacie "dd/MM/yyyy"
-	 */
+	@Override
 	public void setDate (String dat) throws DateFormatException{
 	    Date d; 
 	    try {
@@ -219,19 +215,12 @@ public class Event implements Comparable<Event>, Serializable, Individual, Chron
 	    }
 	}
 	
-	/**
-	 * Ustawia datê zdarzenia.
-	 * @param dat Data jako obiekty klasy Date.
-	 */
+	@Override
 	public void setDate (Date dat){
 	    this.data = dat;
 	}
 	
-	/**
-	 * Ustawia datê zdarzenia.
-	 * @param dat Data w formacie "dd/MM/yyyy HH:mm"
-	 * @throws DateFormatException Podana data mo¿e mieæ b³êdny format.
-	 */
+	@Override
 	public void setDateHour(String dat) throws DateFormatException{
 	    Date d; 
 	    try {
@@ -241,45 +230,33 @@ public class Event implements Comparable<Event>, Serializable, Individual, Chron
 	    }
 	}
 	
-	/**
-	 * Ustawia datê wed³ug liczby milisekund od 01.01.1970
-	 */
+	@Override
 	public void setDate(long dataa){
 		data.setTime(dataa);
 	}
 	
-	/**
-	 * @return Data zdarzenia
-	 */
+	@Override
 	public Date getDate(){
 		return data;
 	}
 	
-	/**
-	 * @return Data zdarzenia w formacie "dd/MM/yyyy HH:mm"
-	 */
+	@Override
 	public String getDateHour(){
 		return sdfHour.format(data);
 	}
 	
-	/**
-	 * @return Godzina zdarzenia w formacie "HH:mm"
-	 */
+	@Override
 	public String getHour(){
 		SimpleDateFormat hour = new SimpleDateFormat("HH:mm");
 		return hour.format(data);
 	}
 	
-	/**
-	 * @return Data zdarzenia w formacie "dd/MM/yyyy"
-	 */
+	@Override
 	public String getDay(){
 		return sdf.format(data);
 	}
 	
-	/**
-	 * @return Data jako liczba milisekund od 01.01.1970
-	 */
+	@Override
 	public long getMiliseconds(){
 		return data.getTime();
 	}
