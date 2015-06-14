@@ -32,7 +32,7 @@ import java.util.GregorianCalendar;
 /**
  * G³ówne okno programu.
  */
-public class Window extends JFrame   {
+public class Window extends JFrame implements EventListWindow   {
 	private EventContainer events;
 	private JPanel contentPane;
 	private JList eventList;
@@ -142,7 +142,7 @@ public class Window extends JFrame   {
 		contentPane.add(eventList);
 		
 		events.sort();
-		updateEventList();
+		refreshDisplayedList();
 		
 		/*this.addWindowListener(new WindowAdapter()  {
 			
@@ -206,11 +206,7 @@ public class Window extends JFrame   {
 		}
 	}
 	
-	/**
-	 * Wywo³uje przypomnienie o zdarzeniu w formie okna komunikatu oraz dŸwiêku.
-	 * @param ev Przypominane zdarzenie
-	 * @param time Czas do zdarzenia.
-	 */
+	@Override
 	public void remindEventMessage(final Event ev, final int time){
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -225,7 +221,7 @@ public class Window extends JFrame   {
 	/**
 	 * Aktualizuje wyœwietlan¹ listê zdarzeñ.
 	 */
-	public void updateEventList(){
+	public void refreshDisplayedList(){
 		if (eventList != null) eventList.setListData(events.ToStringArray());
 	}
 	
@@ -256,7 +252,7 @@ public class Window extends JFrame   {
 		}
 		public void actionPerformed(ActionEvent e) {
 			events.removeAt(selectedItemIndex);
-			updateEventList();
+			refreshDisplayedList();
 		}
 	}
 	
@@ -325,7 +321,7 @@ public class Window extends JFrame   {
 		
 		public void defilter(){
 			events.defilter();
-			updateEventList();
+			refreshDisplayedList();
 			putValue(NAME, "Filtruj wed³ug daty");
 			addEventButton.setEnabled(true);
 		}
@@ -334,20 +330,21 @@ public class Window extends JFrame   {
 		public void sendDate(int day, int month, int year) {
 			GregorianCalendar cal1 = new GregorianCalendar(year,month-1,day,0,0);
 			GregorianCalendar cal2 = new GregorianCalendar(year,month-1,day,23,59);
-			events.dateFilter(cal1.getTime(), cal2.getTime());
-			updateEventList();
+			events.filterByDate(cal1.getTime(), cal2.getTime());
+			refreshDisplayedList();
 			addEventButton.setEnabled(false);
 			putValue(NAME, "Cofnij filtrowanie");
 		}
 	}
 	
+	/*
 	/**
 	 * Pozwala cofn¹æ filtrowanie zdarzeñ z zewn¹trz, je¿eli filtrowanie nast¹pi³o.
-	 */
-	void defilter(){
+	 
+	/*void defilter(){
 		if(events.getFiltered())
 			((FilterAction)filterAction).defilter();
-	}
+	}*/
 	
 	/**
 	 * Usuwa minione zdarzenia.

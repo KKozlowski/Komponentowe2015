@@ -102,7 +102,7 @@ public class SaveLoadWindow extends JFrame {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
-			events.window.defilter();
+			//events.window.defilter();
 			String name = fileName.getText();
 			CollectionSerializator cs;
 			SqlServerSerial sss;

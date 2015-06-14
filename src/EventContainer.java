@@ -27,21 +27,16 @@ import com.thoughtworks.xstream.XStream;
 /**
  * Klasa s³u¿¹ca do wykonywania podtawowych operacji na danych oraz serializowania ich.
  */
-public class EventContainer extends CollectionAdapter<Event> implements ObjectContainer, Tickable, DateFilterable {
+public class EventContainer extends CollectionAdapter<Event> implements CollectionExtender<Event>, Tickable, FilterableByDate {
 	/**
 	 * Lista zdarzeñ
 	 */
 	ArrayList<Event> eventy = new ArrayList<Event>();
 	
 	/**
-	 * Okno powi¹zane z logik¹. Opcjonalne, s³u¿y do odœwie¿ania listy eventów w oknie.
+	 * Okno powi¹zane z logik¹. Mo¿e byæ null. Pole wykorzystywane do wywo³ywania odœwie¿ania widoku.
 	 */
-	Window window;
-	
-	/**
-	 * Serializator xstream
-	 */
-	XStream xstream;
+	EventListWindow window;
 	
 	/**
 	 * Wskazuje, czy kontener jest w trakcie filtrowania.
@@ -57,7 +52,6 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 	 * Postawowy konstruktor
 	 */
 	public EventContainer(){
-		xstream = new XStream();
 		try{
 			Event ev = new Event("Spotkanie", "02/03/2014");
 			Event ev2 = new Event("Spotkanie2", "05/03/2014");
@@ -94,7 +88,7 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 			e.printStackTrace();
 		}
 
-		if (window!=null) window.updateEventList();
+		if (window!=null) window.refreshDisplayedList();
 	}
 	
 	public void printList(ArrayList<Event> eventy){
@@ -112,7 +106,7 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 	 */
 	public void sort(){
 		eventy.sort(new Event().new DateComparator());
-		if (window!= null) window.updateEventList();
+		if (window!= null) window.refreshDisplayedList();
 	}
 	
 	/*public void getEvents(){
@@ -149,7 +143,7 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 	public boolean add(Event arg0) {
 		if(isFiltered) return false;
 		eventy.add(arg0);
-		if (window!=null) window.updateEventList();
+		if (window!=null) window.refreshDisplayedList();
 		return true;
 	}
 	
@@ -181,18 +175,12 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 		
 	}
 	
-	/**
-	 * @param i numer indeksu na liœcie
-	 * @return Event o indeksie i
-	 */
+	@Override
 	public Event get(int i){
 		return eventy.get(i);
 	}
 	
-	/**
-	 * Wykonuje zaawansowan¹ operacjê toString.
-	 * @return Tablica stringów u¿ywana do ustawiania zawartoœci JList.
-	 */
+	@Override
 	public String[] ToStringArray(){
 		ArrayList<String> strings = new ArrayList<String>();
 		for(Event e : eventy)
@@ -203,12 +191,8 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 		return result;
 	}
 	
-	/**
-	 * 
-	 * @param date1 Minimalna granica filtrowanych zdarzeñ
-	 * @param date2 Maksymalna granica filtrowanych zdarzeñ
-	 */
-	public void dateFilter(java.util.Date date1, java.util.Date date2){
+	@Override
+	public void filterByDate(java.util.Date date1, java.util.Date date2){
 		if(!isFiltered){
 			isFiltered = true;
 			
@@ -222,12 +206,28 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 		}
 	}
 	
-	/**
-	 * Cofa filtrowanie
-	 */
+	@Override
 	public void defilter(){
 		eventy = kopiaEventow;
 		isFiltered = false;
+	}
+	
+	@Override
+	public boolean getFiltered(){
+		return isFiltered;
+	}
+	
+	@Override
+	public void deleteBefore(java.util.Date date){
+		ArrayList<Event> toDelete = new ArrayList<Event>();
+		for (Event e : eventy){
+			if (e.getDate().compareTo(date) == -1) toDelete.add(e);
+		}
+		
+		for(Event e: toDelete){
+			eventy.remove(e);
+		}
+		if (window!=null) window.refreshDisplayedList();
 	}
 	
 	/**
@@ -250,30 +250,6 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 	}
 	
 	/**
-	 * sprawdza, czy kontener jest po filtrowaniu.
-	 * @return True - kontener jest po filtorowaniu. False - kontener jest w stanie standardowym.
-	 */
-	public boolean getFiltered(){
-		return isFiltered;
-	}
-	
-	/**
-	 * Usuwa wszystkie obiekty przed podan¹ dat¹.
-	 * @param date Data, przed któr¹ zostan¹ skasowane zdarzenia.
-	 */
-	public void deleteBefore(java.util.Date date){
-		ArrayList<Event> toDelete = new ArrayList<Event>();
-		for (Event e : eventy){
-			if (e.getDate().compareTo(date) == -1) toDelete.add(e);
-		}
-		
-		for(Event e: toDelete){
-			eventy.remove(e);
-		}
-		if (window!=null) window.updateEventList();
-	}
-	
-	/**
 	 * Pozwala ustawiæ referencjê do okna ju¿ po stworzeniu obiektu.
 	 * @param win Ustawiane okno.
 	 */
@@ -286,7 +262,6 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 		return eventy.toArray();
 	}
 	
-	
 	/**
 	 * Usuwa wszystkie elementy kontenera.
 	 */
@@ -298,7 +273,7 @@ public class EventContainer extends CollectionAdapter<Event> implements ObjectCo
 	@Override
 	public boolean addAll(Collection<? extends Event> arg0) {
 		boolean powodzenie = eventy.addAll(arg0);
-		if(window != null) window.updateEventList();
+		if(window != null) window.refreshDisplayedList();
 		return powodzenie;
 	}
 	

@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * Klasa przechowuj¹ca dane poszczególnych zdarzeñ.
  */
-public class Event implements Comparable<Event>, Comparator<Event>, Serializable, Individual, Chronologic, Cloneable{
+public class Event implements Comparable<Event>, Serializable, Individual, Chronologic, Cloneable{
 	private String name;
 	private Date data = new Date();
 	private String description;
@@ -61,6 +61,18 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	/**
 	 * Konstruktor przyjmuj¹cy nazwê i datê.
 	 * @param name Nazwa zdarzenia.
+	 * @param dataa Data jako obiekt klasy Date
+	 * @throws DateFormatException Mo¿liwoœæ b³êdnego odczytu daty.
+	 */
+	public Event(String name, Date dataa) {
+		this();
+		setName(name);
+		setDate(dataa);
+	}
+	
+	/**
+	 * Konstruktor przyjmuj¹cy nazwê i datê.
+	 * @param name Nazwa zdarzenia.
 	 * @param dataa Data jako suma milisekund od 01.01.1970.
 	 */
 	public Event (String name, long dataa){
@@ -83,7 +95,13 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 		setDescription(description);
 	}
 	
-	public Event (String name, Date dataa, String description) throws DateFormatException{
+	/**
+	 * Konstruktor przyjmuj¹cy nazwê, datê i opis.
+	 * @param name Nazwa zdarzenia.
+	 * @param dataa Data jako obiekt klasy Date
+	 * @param description Opis zdarzenia.
+	 */
+	public Event (String name, Date dataa, String description){
 		this();
 		setName(name);
 		setDate(dataa);
@@ -272,11 +290,6 @@ public class Event implements Comparable<Event>, Comparator<Event>, Serializable
 	
 	public int compareTo(Event ev){
 	    return comparator.compare(this, ev);
-	}
-
-	@Override
-	public int compare(Event arg0, Event arg1) {
-		return comparator.compare(arg0, arg1);
 	}
 	
 	class NameComparator implements Comparator<Event>{
